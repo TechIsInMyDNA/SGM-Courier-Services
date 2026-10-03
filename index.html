@@ -353,7 +353,7 @@
         flex-direction: column !important;
         width: 100% !important;
         max-width: 105mm !important;
-        height: 142mm !important; /* Buffer prevents Android 0.5px page spill */
+        height: 142mm !important;
         max-height: 143mm !important;
         margin: 0 auto !important;
         padding: 3mm 4mm !important;
@@ -435,6 +435,7 @@
         flex-shrink: 0;
       }
 
+      /* Matter container centers itself in box, but internal lines align left cleanly */
       .a6-text-to {
         font-weight: 800;
         white-space: pre-wrap;
@@ -445,7 +446,8 @@
         display: flex;
         flex-direction: column;
         justify-content: space-evenly;
-        text-align: center !important;
+        align-items: center;
+        text-align: left !important;
       }
 
       .a6-divider {
@@ -462,6 +464,7 @@
         min-height: 0;
       }
 
+      /* Matter container centers itself in box, but internal lines align left cleanly */
       .a6-text-from {
         font-weight: 700;
         white-space: pre-wrap;
@@ -471,7 +474,8 @@
         display: flex;
         flex-direction: column;
         justify-content: space-evenly;
-        text-align: center !important;
+        align-items: center;
+        text-align: left !important;
       }
 
       .a6-footer {
@@ -516,7 +520,7 @@
     <div class="nav-btns">
       <button class="btn" id="btnOpenLedger">📊 Ledger</button>
       <button class="btn" id="btnOpenBackup">💾 Backup & Restore</button>
-      <button class="btn" id="btnOpenSettings">⚙️ Settings</button>
+      <button class="btn" id="btnOpenSettings">⚙️️ Settings</button>
       <button class="btn btn-primary" id="btnNewSlip">➕ New Slip</button>
     </div>
   </header>
@@ -708,8 +712,8 @@ Mob:- 9403346235
   <!-- SETTINGS MODAL -->
   <div class="modal-wrap" id="modalSettings">
     <div class="modal-content">
-      <h3>⚙️ Cloud Security Settings</h3>
-      <p style="font-size:11px; color:var(--muted);">Master password daal kar token configure karein. Repo: <code>TechIsInMyDNA/SGM-Courier-Services</code>[span_3](start_span)[span_3](end_span)</p>
+      <h3>⚙️️ Cloud Security Settings</h3>
+      <p style="font-size:11px; color:var(--muted);">Master password daal kar token configure karein. Repo: <code>TechIsInMyDNA/SGM-Courier-Services</code></p>
       
       <div class="field" id="passBlock">
         <label>Master Password:</label>
