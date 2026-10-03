@@ -39,7 +39,6 @@
       flex-direction: column;
     }
 
-    /* Top Compact Nav */
     header {
       background: var(--panel);
       border-bottom: 1px solid var(--border);
@@ -110,7 +109,6 @@
     .btn-emerald:hover { background: #047857; }
     .btn-sm { padding: 4px 8px; font-size: 11px; }
 
-    /* Layout */
     .container {
       display: grid;
       grid-template-columns: 420px 1fr;
@@ -127,7 +125,6 @@
       }
     }
 
-    /* Left Form Panel */
     .form-panel {
       background: var(--panel);
       border-right: 1px solid var(--border);
@@ -202,7 +199,6 @@
       padding-bottom: 10px;
     }
 
-    /* Right Table Panel */
     .data-panel {
       display: flex;
       flex-direction: column;
@@ -218,7 +214,6 @@
       }
     }
 
-    /* Stats strip */
     .stats-row {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -239,13 +234,11 @@
     .stat-label { font-size: 10px; color: var(--muted); font-weight: 600; }
     .stat-value { font-size: 15px; font-weight: 700; font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
 
-    /* Search & Filters */
     .search-row {
       display: flex;
       gap: 8px;
     }
 
-    /* Table Container */
     .table-box {
       flex: 1;
       overflow-y: auto;
@@ -301,7 +294,6 @@
       font-weight: 700;
     }
 
-    /* Modal Styling */
     .modal-wrap {
       position: fixed;
       inset: 0;
@@ -333,9 +325,7 @@
       color: #fff;
     }
 
-    /* =========================================================
-       HIGH-READABILITY SINGLE PAGE A6 PORTRAIT FIT (105mm x 148mm)
-       ========================================================= */
+    /* STRICT A6 PORTRAIT PRINT STYLES */
     #print-sheet {
       display: none;
     }
@@ -414,7 +404,7 @@
       }
 
       .a6-header span {
-        font-size: 11pt;
+        font-size: 10.5pt;
         font-weight: 800;
       }
 
@@ -511,7 +501,7 @@
       <span>📦</span> SGM Courier Hub
       <div class="status-badge">
         <span class="dot" id="syncDot"></span>
-        <span id="syncText">Live Cloud</span>
+        <span id="syncText">Military Encrypted</span>
       </div>
     </div>
     <div class="nav-btns">
@@ -554,8 +544,11 @@ Mob:- 9403346235
 
       <div class="grid-2">
         <div class="field">
-          <label>Date (Dt):</label>
-          <input type="text" id="slipDate">
+          <label>Date & Time (Dt):</label>
+          <div style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 5px;">
+            <input type="date" id="slipDate" title="Calendar se date chunein">
+            <input type="time" id="slipTime" title="Clock se time chunein">
+          </div>
         </div>
         <div class="field">
           <label>Package Weight:</label>
@@ -661,7 +654,7 @@ Mob:- 9403346235
         <table>
           <thead>
             <tr>
-              <th>Date</th>
+              <th>Date & Time</th>
               <th>Customer / City</th>
               <th>Courier & Docket</th>
               <th>Weight</th>
@@ -707,7 +700,7 @@ Mob:- 9403346235
   <div class="modal-wrap" id="modalSettings">
     <div class="modal-content">
       <h3>⚙️ Cloud Security Settings</h3>
-      <p style="font-size:11px; color:var(--muted);">Master password daal kar token configure karein. Repo: <code>TechIsInMyDNA/SGM-Courier-Services</code>[span_0](start_span)[span_0](end_span)</p>
+      <p style="font-size:11px; color:var(--muted);">Master password daal kar token configure karein. Repo: <code>TechIsInMyDNA/SGM-Courier-Services</code>[span_7](start_span)[span_7](end_span)</p>
       
       <div class="field" id="passBlock">
         <label>Master Password:</label>
@@ -717,7 +710,7 @@ Mob:- 9403346235
       <div class="field" id="tokenBlock" style="display:none;">
         <label>GitHub Personal Access Token (PAT):</label>
         <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxx">
-        <small style="font-size:10px; color:var(--emerald); margin-top:2px;">Token AES encrypted rahega, safe and protected.</small>
+        <small style="font-size:10px; color:var(--emerald); margin-top:2px;">Token aur GitHub data dono AES-256 encrypted rahenge.</small>
       </div>
 
       <div style="display:flex; justify-content:flex-end; gap:8px;">
@@ -731,10 +724,10 @@ Mob:- 9403346235
   <!-- BACKUP & RESTORE MODAL -->
   <div class="modal-wrap" id="modalBackup">
     <div class="modal-content">
-      <h3>💾 Backup & Restore</h3>
+      <h3>💾 Backup & Restore (Encrypted)</h3>
       <div style="display:flex; flex-direction:column; gap:8px; border:1px dashed var(--border); padding:10px; border-radius:6px;">
         <strong style="font-size:12px;">📥 Download Backup JSON</strong>
-        <p style="font-size:11px; color:var(--muted);">Sara courier database ek file me save karein.</p>
+        <p style="font-size:11px; color:var(--muted);">Military-grade encrypted raw JSON database download karein.</p>
         <button class="btn btn-primary btn-sm" id="btnExportJSON">Download JSON</button>
       </div>
 
@@ -781,6 +774,7 @@ Mob:- 9403346235
       toInput: document.getElementById('toInput'),
       fromInput: document.getElementById('fromInput'),
       slipDate: document.getElementById('slipDate'),
+      slipTime: document.getElementById('slipTime'),
       wtVal: document.getElementById('wtVal'),
       wtUnit: document.getElementById('wtUnit'),
       custName: document.getElementById('custName'),
@@ -800,7 +794,6 @@ Mob:- 9403346235
       activeEditingBadge: document.getElementById('activeEditingBadge')
     };
 
-    // ON DOM LOAD
     window.addEventListener('DOMContentLoaded', () => {
       initDate();
       loadLocalData();
@@ -809,23 +802,77 @@ Mob:- 9403346235
       initSync();
     });
 
-    function initDate() {
-      const d = new Date();
-      elements.slipDate.value = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+    function formatTime12(time24) {
+      if (!time24) return '';
+      const [hStr, mStr] = time24.split(':');
+      let h = parseInt(hStr, 10);
+      const m = mStr || '00';
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      h = h % 12;
+      h = h ? h : 12;
+      return `${String(h).padStart(2, '0')}:${m} ${ampm}`;
     }
 
-    // LOCAL STORAGE & AES ENCRYPTION
+    function formatDateDisplay(dateStr) {
+      if (!dateStr) return '';
+      if (dateStr.includes('-')) {
+        const [y, m, d] = dateStr.split('-');
+        return `${d}/${m}/${y}`;
+      }
+      return dateStr;
+    }
+
+    function initDate() {
+      const d = new Date();
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      elements.slipDate.value = `${yyyy}-${mm}-${dd}`;
+      const hh = String(d.getHours()).padStart(2, '0');
+      const min = String(d.getMinutes()).padStart(2, '0');
+      elements.slipTime.value = `${hh}:${min}`;
+    }
+
+    // MILITARY-GRADE AES-256 CRYPTO UTILS
+    function encryptPayload(dataObj) {
+      const jsonStr = JSON.stringify(dataObj);
+      return CryptoJS.AES.encrypt(jsonStr, MASTER_KEY).toString();
+    }
+
+    function decryptPayload(cipherText) {
+      if (!cipherText) return null;
+      try {
+        const bytes = CryptoJS.AES.decrypt(cipherText, MASTER_KEY);
+        const decryptedStr = bytes.toString(CryptoJS.enc.Utf8);
+        if (!decryptedStr) return null;
+        return JSON.parse(decryptedStr);
+      } catch (e) {
+        return null;
+      }
+    }
+
+    // LOCAL STORAGE (ENCRYPTED)
     function loadLocalData() {
       try {
         const raw = localStorage.getItem('sgm_courier_db');
-        if (raw) state.entries = JSON.parse(raw);
+        if (raw) {
+          // If already encrypted or plain array fallback
+          if (raw.startsWith('[') || raw.startsWith('{')) {
+            const parsed = JSON.parse(raw);
+            state.entries = Array.isArray(parsed) ? parsed : [];
+          } else {
+            const decrypted = decryptPayload(raw);
+            state.entries = Array.isArray(decrypted) ? decrypted : [];
+          }
+        }
       } catch (e) {
         state.entries = [];
       }
     }
 
     function saveLocalData() {
-      localStorage.setItem('sgm_courier_db', JSON.stringify(state.entries));
+      const enc = encryptPayload(state.entries);
+      localStorage.setItem('sgm_courier_db', enc);
     }
 
     function getDecryptedToken() {
@@ -844,7 +891,7 @@ Mob:- 9403346235
       localStorage.setItem('sgm_courier_tok', enc);
     }
 
-    // CLOUD SYNC
+    // CLOUD SYNC ENGINE (AES-256 CLOUD ENCRYPTED)
     function updateSyncBadge(status, label) {
       elements.syncDot.className = 'dot';
       if (status === 'syncing') elements.syncDot.classList.add('syncing');
@@ -872,13 +919,28 @@ Mob:- 9403346235
         if (res.status === 200) {
           const data = await res.json();
           state.sha = data.sha;
-          const parsed = JSON.parse(decodeURIComponent(escape(atob(data.content))));
+          const rawDecoded = decodeURIComponent(escape(atob(data.content)));
+
+          // Check if payload is Military Encrypted or Legacy Plain
+          let parsed = null;
+          try {
+            const jsonCheck = JSON.parse(rawDecoded);
+            if (jsonCheck && jsonCheck.encryptedPayload) {
+              parsed = decryptPayload(jsonCheck.encryptedPayload);
+            } else if (Array.isArray(jsonCheck)) {
+              parsed = jsonCheck;
+            }
+          } catch (ex) {
+            // Raw text might be encrypted string directly
+            parsed = decryptPayload(rawDecoded);
+          }
+
           if (Array.isArray(parsed)) {
             state.entries = parsed;
             saveLocalData();
             renderUI();
           }
-          updateSyncBadge('ready', 'Live Cloud');
+          updateSyncBadge('ready', 'Military Encrypted');
         } else if (res.status === 404) {
           await pushToGitHub();
         } else {
@@ -894,12 +956,21 @@ Mob:- 9403346235
       if (!token) return;
 
       try {
-        updateSyncBadge('syncing', 'Pushing Live...');
-        const jsonText = JSON.stringify(state.entries, null, 2);
-        const b64 = btoa(unescape(encodeURIComponent(jsonText)));
+        updateSyncBadge('syncing', 'Encrypting & Syncing...');
+        
+        // MILITARY LEVEL PAYLOAD WRAPPER
+        const cipher = encryptPayload(state.entries);
+        const cloudEnvelope = JSON.stringify({
+          secured: true,
+          algorithm: "AES-256-CBC",
+          updatedAt: new Date().toISOString(),
+          encryptedPayload: cipher
+        }, null, 2);
+
+        const b64 = btoa(unescape(encodeURIComponent(cloudEnvelope)));
 
         const payload = {
-          message: `Live Sync ${new Date().toISOString()}`,
+          message: `Secure Sync [AES-256] ${new Date().toISOString()}`,
           content: b64
         };
         if (state.sha) payload.sha = state.sha;
@@ -917,7 +988,7 @@ Mob:- 9403346235
         if (res.ok) {
           const resp = await res.json();
           state.sha = resp.content.sha;
-          updateSyncBadge('ready', 'Live Cloud');
+          updateSyncBadge('ready', 'Military Encrypted');
         } else {
           updateSyncBadge('error', 'Push Failed');
         }
@@ -931,7 +1002,6 @@ Mob:- 9403346235
       setInterval(syncFromGitHub, 12000);
     }
 
-    // FORM RESET & DATA BINDING
     function resetForm() {
       state.editingId = null;
       elements.formModeTitle.textContent = 'Create Label';
@@ -952,7 +1022,11 @@ Mob:- 9403346235
     function handleSave(triggerPrint) {
       const toVal = elements.toInput.value.trim();
       const fromVal = elements.fromInput.value.trim();
-      const dateVal = elements.slipDate.value.trim();
+      const rawDate = elements.slipDate.value;
+      const rawTime = elements.slipTime.value;
+      const displayDate = formatDateDisplay(rawDate);
+      const displayTime = formatTime12(rawTime);
+      const dateVal = displayTime ? `${displayDate} ${displayTime}` : displayDate;
       const wtNum = elements.wtVal.value.trim();
       const wtUnit = elements.wtUnit.value;
 
@@ -977,6 +1051,8 @@ Mob:- 9403346235
       const record = {
         id: state.editingId || 'sgm_' + Date.now(),
         date: dateVal,
+        rawDate: rawDate,
+        rawTime: rawTime,
         to: toVal,
         from: fromVal,
         wt: wtNum ? `${wtNum} ${wtUnit}` : '---',
@@ -1019,7 +1095,6 @@ Mob:- 9403346235
       window.print();
     }
 
-    // ACTIONS: EDIT / DELETE / REUSE / PRINT
     window.actionPrint = function(id) {
       const rec = state.entries.find(x => x.id === id);
       if (rec) runPrint(rec);
@@ -1045,7 +1120,17 @@ Mob:- 9403346235
 
       elements.toInput.value = rec.to || '';
       elements.fromInput.value = rec.from || '';
-      elements.slipDate.value = rec.date || '';
+
+      if (rec.rawDate) {
+        elements.slipDate.value = rec.rawDate;
+        elements.slipTime.value = rec.rawTime || '';
+      } else if (rec.date) {
+        const parts = rec.date.split(' ');
+        if (parts[0] && parts[0].includes('/')) {
+          const [d, m, y] = parts[0].split('/');
+          elements.slipDate.value = `${y}-${m}-${d}`;
+        }
+      }
 
       if (rec.wt && rec.wt.includes(' ')) {
         const p = rec.wt.split(' ');
@@ -1077,7 +1162,6 @@ Mob:- 9403346235
       }
     };
 
-    // RENDER TABLE & STATS
     function renderUI() {
       const filter = elements.statusFilter.value;
       const q = elements.tableSearch.value.toLowerCase().trim();
@@ -1140,9 +1224,7 @@ Mob:- 9403346235
       }).join('');
     }
 
-    // BIND EVENT LISTENERS NATIVELY
     function bindEvents() {
-      // Clear TO Button
       document.getElementById('btnClearTo').addEventListener('click', () => {
         elements.toInput.value = '';
         elements.custName.value = '';
@@ -1150,16 +1232,13 @@ Mob:- 9403346235
         elements.toInput.focus();
       });
 
-      // Form Save Buttons
       document.getElementById('btnSaveAndPrint').addEventListener('click', () => handleSave(true));
       document.getElementById('btnSaveOnly').addEventListener('click', () => handleSave(false));
       document.getElementById('btnNewSlip').addEventListener('click', resetForm);
 
-      // Search & Filter Inputs
       elements.tableSearch.addEventListener('input', renderUI);
       elements.statusFilter.addEventListener('change', renderUI);
 
-      // Settings Modal
       document.getElementById('btnOpenSettings').addEventListener('click', () => {
         document.getElementById('modalSettings').classList.add('open');
         document.getElementById('passInput').value = '';
@@ -1198,7 +1277,6 @@ Mob:- 9403346235
         syncFromGitHub();
       });
 
-      // Backup & Restore Modal
       document.getElementById('btnOpenBackup').addEventListener('click', () => {
         document.getElementById('modalBackup').classList.add('open');
       });
@@ -1208,11 +1286,18 @@ Mob:- 9403346235
       });
 
       document.getElementById('btnExportJSON').addEventListener('click', () => {
-        const jsonStr = JSON.stringify(state.entries, null, 2);
-        const blob = new Blob([jsonStr], { type: 'application/json' });
+        const cipher = encryptPayload(state.entries);
+        const backupEnvelope = JSON.stringify({
+          secured: true,
+          algorithm: "AES-256",
+          exportDate: new Date().toISOString(),
+          encryptedPayload: cipher
+        }, null, 2);
+
+        const blob = new Blob([backupEnvelope], { type: 'application/json' });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = `SGM_Courier_Backup_${new Date().toISOString().slice(0,10)}.json`;
+        a.download = `SGM_Courier_Encrypted_Backup_${new Date().toISOString().slice(0,10)}.json`;
         a.click();
       });
 
@@ -1225,27 +1310,38 @@ Mob:- 9403346235
         const reader = new FileReader();
         reader.onload = (e) => {
           try {
-            const arr = JSON.parse(e.target.result);
+            const raw = e.target.result;
+            let arr = null;
+            try {
+              const parsed = JSON.parse(raw);
+              if (parsed && parsed.encryptedPayload) {
+                arr = decryptPayload(parsed.encryptedPayload);
+              } else if (Array.isArray(parsed)) {
+                arr = parsed;
+              }
+            } catch (err) {
+              arr = decryptPayload(raw);
+            }
+
             if (Array.isArray(arr)) {
-              if (confirm(`${arr.length} records restore karne hain?`)) {
+              if (confirm(`${arr.length} records decrypt aur restore karne hain?`)) {
                 state.entries = arr;
                 saveLocalData();
                 renderUI();
                 pushToGitHub();
-                alert('Database successfully restore ho gaya!');
+                alert('Database encrypted form me successfully restore ho gaya!');
                 document.getElementById('modalBackup').classList.remove('open');
               }
             } else {
-              alert('Galat file format! JSON list format honi chahiye.');
+              alert('File decrypt nahi ho payi ya galat format hai!');
             }
           } catch (err) {
-            alert('JSON read error: ' + err.message);
+            alert('File error: ' + err.message);
           }
         };
         reader.readAsText(file);
       });
 
-      // Ledger Modal
       document.getElementById('btnOpenLedger').addEventListener('click', () => {
         renderLedger();
         document.getElementById('modalLedger').classList.add('open');
