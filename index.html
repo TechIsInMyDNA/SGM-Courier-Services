@@ -325,40 +325,38 @@
       color: #fff;
     }
 
-    /* STRICT A6 PORTRAIT PRINT STYLES */
+    /* =========================================================
+       DYNAMIC FIT SINGLE PAGE A6 PORTRAIT (105mm x 148mm)
+       ========================================================= */
     #print-sheet {
       display: none;
     }
 
     @media print {
+      header, .container, .modal-wrap {
+        display: none !important;
+      }
+
       html, body {
         width: 105mm !important;
         height: 148mm !important;
+        max-width: 105mm !important;
+        max-height: 148mm !important;
         margin: 0 !important;
         padding: 0 !important;
         background: #fff !important;
         overflow: hidden !important;
       }
 
-      body * {
-        visibility: hidden !important;
-      }
-
-      #print-sheet, #print-sheet * {
-        visibility: visible !important;
-      }
-
       #print-sheet {
-        display: block !important;
-        position: fixed !important;
-        left: 0 !important;
-        top: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
         width: 105mm !important;
         height: 148mm !important;
         max-width: 105mm !important;
         max-height: 148mm !important;
         margin: 0 !important;
-        padding: 4mm !important;
+        padding: 3.5mm !important;
         box-sizing: border-box !important;
         background: #fff !important;
         color: #000 !important;
@@ -369,7 +367,7 @@
 
       @page {
         size: 105mm 148mm;
-        margin: 0mm;
+        margin: 0;
       }
 
       .a6-outer {
@@ -380,7 +378,7 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        padding: 6px 7px;
+        padding: 5px 6px;
         box-sizing: border-box;
         font-family: Arial, Helvetica, sans-serif;
         overflow: hidden;
@@ -396,7 +394,7 @@
       }
 
       .a6-header h2 {
-        font-size: 14pt;
+        font-size: 13.5pt;
         font-weight: 900;
         letter-spacing: 0.5px;
         margin: 0;
@@ -404,7 +402,7 @@
       }
 
       .a6-header span {
-        font-size: 10.5pt;
+        font-size: 9.5pt;
         font-weight: 800;
       }
 
@@ -413,39 +411,40 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        padding: 5px 0;
+        padding: 3px 0;
         overflow: hidden;
+        min-height: 0;
       }
 
       .a6-section-to {
-        flex: 1.35;
+        flex: 1.4;
         display: flex;
         flex-direction: column;
         overflow: hidden;
+        min-height: 0;
       }
 
       .a6-label {
-        font-size: 12pt;
+        font-size: 11pt;
         font-weight: 900;
         text-decoration: underline;
-        margin-bottom: 3px;
+        margin-bottom: 2px;
         display: inline-block;
         flex-shrink: 0;
       }
 
       .a6-text-to {
-        font-size: 13.5pt;
         font-weight: 800;
-        line-height: 1.25;
         white-space: pre-wrap;
         word-break: break-word;
         letter-spacing: -0.2px;
         overflow: hidden;
+        flex: 1;
       }
 
       .a6-divider {
         border-top: 2px dashed #000;
-        margin: 4px 0;
+        margin: 3px 0;
         flex-shrink: 0;
       }
 
@@ -454,20 +453,20 @@
         display: flex;
         flex-direction: column;
         overflow: hidden;
+        min-height: 0;
       }
 
       .a6-text-from {
-        font-size: 10.5pt;
         font-weight: 700;
-        line-height: 1.22;
         white-space: pre-wrap;
         word-break: break-word;
         overflow: hidden;
+        flex: 1;
       }
 
       .a6-footer {
         border-top: 2.5px solid #000;
-        padding-top: 4px;
+        padding-top: 3px;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -476,16 +475,16 @@
 
       .a6-wt {
         border: 2.2px solid #000;
-        padding: 3px 8px;
+        padding: 2px 7px;
         border-radius: 4px;
-        font-size: 12pt;
+        font-size: 11pt;
         font-weight: 900;
         background: #f0f0f0 !important;
         -webkit-print-color-adjust: exact;
       }
 
       .a6-meta {
-        font-size: 10pt;
+        font-size: 9pt;
         font-weight: 800;
         text-align: right;
         line-height: 1.2;
@@ -699,8 +698,8 @@ Mob:- 9403346235
   <!-- SETTINGS MODAL -->
   <div class="modal-wrap" id="modalSettings">
     <div class="modal-content">
-      <h3>⚙️ Cloud Security Settings</h3>
-      <p style="font-size:11px; color:var(--muted);">Master password daal kar token configure karein. Repo: <code>TechIsInMyDNA/SGM-Courier-Services</code>[span_7](start_span)[span_7](end_span)</p>
+      <h3>⚙️️ Cloud Security Settings</h3>
+      <p style="font-size:11px; color:var(--muted);">Master password daal kar token configure karein. Repo: <code>TechIsInMyDNA/SGM-Courier-Services</code>[span_5](start_span)[span_5](end_span)</p>
       
       <div class="field" id="passBlock">
         <label>Master Password:</label>
@@ -856,7 +855,6 @@ Mob:- 9403346235
       try {
         const raw = localStorage.getItem('sgm_courier_db');
         if (raw) {
-          // If already encrypted or plain array fallback
           if (raw.startsWith('[') || raw.startsWith('{')) {
             const parsed = JSON.parse(raw);
             state.entries = Array.isArray(parsed) ? parsed : [];
@@ -921,7 +919,6 @@ Mob:- 9403346235
           state.sha = data.sha;
           const rawDecoded = decodeURIComponent(escape(atob(data.content)));
 
-          // Check if payload is Military Encrypted or Legacy Plain
           let parsed = null;
           try {
             const jsonCheck = JSON.parse(rawDecoded);
@@ -931,7 +928,6 @@ Mob:- 9403346235
               parsed = jsonCheck;
             }
           } catch (ex) {
-            // Raw text might be encrypted string directly
             parsed = decryptPayload(rawDecoded);
           }
 
@@ -958,7 +954,6 @@ Mob:- 9403346235
       try {
         updateSyncBadge('syncing', 'Encrypting & Syncing...');
         
-        // MILITARY LEVEL PAYLOAD WRAPPER
         const cipher = encryptPayload(state.entries);
         const cloudEnvelope = JSON.stringify({
           secured: true,
@@ -1085,6 +1080,45 @@ Mob:- 9403346235
       }
     }
 
+    // DYNAMIC FONT CALIBRATION ENGINE FOR TO & FROM (A6 PORTRAIT FIT)
+    function autoScalePrintFonts(toText, fromText) {
+      const toElem = document.getElementById('pTo');
+      const fromElem = document.getElementById('pFrom');
+
+      const toLen = (toText || '').trim().length;
+      const toLines = (toText || '').trim().split('\n').length;
+
+      const fromLen = (fromText || '').trim().length;
+      const fromLines = (fromText || '').trim().split('\n').length;
+
+      // Smart dynamic scale for TO box
+      if (toLen > 240 || toLines > 7) {
+        toElem.style.fontSize = '9.5pt';
+        toElem.style.lineHeight = '1.15';
+      } else if (toLen > 160 || toLines > 5) {
+        toElem.style.fontSize = '11pt';
+        toElem.style.lineHeight = '1.2';
+      } else if (toLen > 100 || toLines > 4) {
+        toElem.style.fontSize = '12.5pt';
+        toElem.style.lineHeight = '1.22';
+      } else {
+        toElem.style.fontSize = '14pt';
+        toElem.style.lineHeight = '1.28';
+      }
+
+      // Smart dynamic scale for FROM box
+      if (fromLen > 200 || fromLines > 7) {
+        fromElem.style.fontSize = '8pt';
+        fromElem.style.lineHeight = '1.12';
+      } else if (fromLen > 130 || fromLines > 5) {
+        fromElem.style.fontSize = '9pt';
+        fromElem.style.lineHeight = '1.16';
+      } else {
+        fromElem.style.fontSize = '10pt';
+        fromElem.style.lineHeight = '1.22';
+      }
+    }
+
     function runPrint(rec) {
       document.getElementById('pDate').textContent = `Dt: ${rec.date || ''}`;
       document.getElementById('pTo').textContent = rec.to || '';
@@ -1092,6 +1126,10 @@ Mob:- 9403346235
       document.getElementById('pWt').textContent = `WT: ${rec.wt || '---'}`;
       document.getElementById('pPartner').textContent = rec.partner ? `Courier: ${rec.partner}` : '';
       document.getElementById('pTrack').textContent = rec.tracking ? `Docket: ${rec.tracking}` : '';
+
+      // Auto-fit font sizes according to text bulk
+      autoScalePrintFonts(rec.to, rec.from);
+
       window.print();
     }
 
@@ -1216,7 +1254,7 @@ Mob:- 9403346235
             <td style="text-align:right; white-space:nowrap;">
               <button class="btn btn-sm" onclick="actionPrint('${item.id}')" title="Print">🖨️</button>
               <button class="btn btn-sm" onclick="actionReuse('${item.id}')" title="Reuse">📋</button>
-              <button class="btn btn-sm" onclick="actionEdit('${item.id}')" title="Edit">✏️</button>
+              <button class="btn btn-sm" onclick="actionEdit('${item.id}')" title="Edit">✏️️</button>
               <button class="btn btn-sm" style="color:#ef4444;" onclick="actionDelete('${item.id}')" title="Delete">🗑️</button>
             </td>
           </tr>
