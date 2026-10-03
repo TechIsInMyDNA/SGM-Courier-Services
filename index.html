@@ -425,17 +425,18 @@
         min-height: 0;
       }
 
-      .a6-label {
+      /* TO label on the Right */
+      .a6-label-to {
         font-size: 11pt;
         font-weight: 900;
         text-decoration: underline;
         margin-bottom: 2px;
         display: block;
-        text-align: left !important;
+        text-align: right !important;
         flex-shrink: 0;
       }
 
-      /* Matter container centers itself in box, but internal lines align left cleanly */
+      /* TO Matter strictly left-aligned with even spacing */
       .a6-text-to {
         font-weight: 800;
         white-space: pre-wrap;
@@ -446,8 +447,9 @@
         display: flex;
         flex-direction: column;
         justify-content: space-evenly;
-        align-items: center;
         text-align: left !important;
+        align-items: flex-start !important;
+        width: 100%;
       }
 
       .a6-divider {
@@ -464,7 +466,18 @@
         min-height: 0;
       }
 
-      /* Matter container centers itself in box, but internal lines align left cleanly */
+      /* FROM label on the Right */
+      .a6-label-from {
+        font-size: 11pt;
+        font-weight: 900;
+        text-decoration: underline;
+        margin-bottom: 2px;
+        display: block;
+        text-align: right !important;
+        flex-shrink: 0;
+      }
+
+      /* FROM Matter strictly left-aligned with even spacing */
       .a6-text-from {
         font-weight: 700;
         white-space: pre-wrap;
@@ -474,8 +487,9 @@
         display: flex;
         flex-direction: column;
         justify-content: space-evenly;
-        align-items: center;
         text-align: left !important;
+        align-items: flex-start !important;
+        width: 100%;
       }
 
       .a6-footer {
@@ -520,7 +534,7 @@
     <div class="nav-btns">
       <button class="btn" id="btnOpenLedger">📊 Ledger</button>
       <button class="btn" id="btnOpenBackup">💾 Backup & Restore</button>
-      <button class="btn" id="btnOpenSettings">⚙️️ Settings</button>
+      <button class="btn" id="btnOpenSettings">⚙️ Settings</button>
       <button class="btn btn-primary" id="btnNewSlip">➕ New Slip</button>
     </div>
   </header>
@@ -690,12 +704,12 @@ Mob:- 9403346235
       </div>
       <div class="a6-body">
         <div class="a6-section-to">
-          <div class="a6-label">TO:</div>
+          <div class="a6-label-to">TO:</div>
           <div class="a6-text-to" id="pTo"></div>
         </div>
         <div class="a6-divider"></div>
         <div class="a6-section-from">
-          <div class="a6-label">FROM:</div>
+          <div class="a6-label-from">FROM:</div>
           <div class="a6-text-from" id="pFrom"></div>
         </div>
       </div>
@@ -712,7 +726,7 @@ Mob:- 9403346235
   <!-- SETTINGS MODAL -->
   <div class="modal-wrap" id="modalSettings">
     <div class="modal-content">
-      <h3>⚙️️ Cloud Security Settings</h3>
+      <h3>⚙️ Cloud Security Settings</h3>
       <p style="font-size:11px; color:var(--muted);">Master password daal kar token configure karein. Repo: <code>TechIsInMyDNA/SGM-Courier-Services</code></p>
       
       <div class="field" id="passBlock">
@@ -1087,7 +1101,7 @@ Mob:- 9403346235
       }
     }
 
-    // AUTO-FONT ALGORITHM (CENTER ALIGNED & ZERO BOTTOM WHITE SPACE)
+    // AUTO-FONT ALGORITHM (LEFT-ALIGNED CLEAN SPREAD & ZERO WHITE SPACE)
     function fitTextToBox(element, parentSection, minPt, maxPt) {
       if (!element || !parentSection) return;
 
