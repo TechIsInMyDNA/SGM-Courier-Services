@@ -402,7 +402,7 @@
       }
 
       .a6-header span {
-        font-size: 9.5pt;
+        font-size: 10pt;
         font-weight: 800;
       }
 
@@ -410,14 +410,13 @@
         flex: 1;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        padding: 3px 0;
+        padding: 2px 0;
         overflow: hidden;
         min-height: 0;
       }
 
       .a6-section-to {
-        flex: 1.4;
+        flex: 1.45;
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -440,6 +439,8 @@
         letter-spacing: -0.2px;
         overflow: hidden;
         flex: 1;
+        display: flex;
+        align-items: flex-start;
       }
 
       .a6-divider {
@@ -462,6 +463,8 @@
         word-break: break-word;
         overflow: hidden;
         flex: 1;
+        display: flex;
+        align-items: flex-start;
       }
 
       .a6-footer {
@@ -477,14 +480,14 @@
         border: 2.2px solid #000;
         padding: 2px 7px;
         border-radius: 4px;
-        font-size: 11pt;
+        font-size: 11.5pt;
         font-weight: 900;
         background: #f0f0f0 !important;
         -webkit-print-color-adjust: exact;
       }
 
       .a6-meta {
-        font-size: 9pt;
+        font-size: 9.5pt;
         font-weight: 800;
         text-align: right;
         line-height: 1.2;
@@ -698,8 +701,8 @@ Mob:- 9403346235
   <!-- SETTINGS MODAL -->
   <div class="modal-wrap" id="modalSettings">
     <div class="modal-content">
-      <h3>⚙️️ Cloud Security Settings</h3>
-      <p style="font-size:11px; color:var(--muted);">Master password daal kar token configure karein. Repo: <code>TechIsInMyDNA/SGM-Courier-Services</code>[span_5](start_span)[span_5](end_span)</p>
+      <h3>⚙️ Cloud Security Settings</h3>
+      <p style="font-size:11px; color:var(--muted);">Master password daal kar token configure karein. Repo: <code>TechIsInMyDNA/SGM-Courier-Services</code>[span_1](start_span)[span_1](end_span)</p>
       
       <div class="field" id="passBlock">
         <label>Master Password:</label>
@@ -755,20 +758,17 @@ Mob:- 9403346235
   </div>
 
   <script>
-    // HARDCODED CONSTANTS
     const REPO_OWNER = 'TechIsInMyDNA';
     const REPO_NAME = 'SGM-Courier-Services';
     const FILE_PATH = 'data.json';
     const MASTER_KEY = 'Courier@144';
 
-    // APP STATE
     let state = {
       entries: [],
       editingId: null,
       sha: null
     };
 
-    // DOM ELEMENTS
     const elements = {
       toInput: document.getElementById('toInput'),
       fromInput: document.getElementById('fromInput'),
@@ -832,7 +832,6 @@ Mob:- 9403346235
       elements.slipTime.value = `${hh}:${min}`;
     }
 
-    // MILITARY-GRADE AES-256 CRYPTO UTILS
     function encryptPayload(dataObj) {
       const jsonStr = JSON.stringify(dataObj);
       return CryptoJS.AES.encrypt(jsonStr, MASTER_KEY).toString();
@@ -850,7 +849,6 @@ Mob:- 9403346235
       }
     }
 
-    // LOCAL STORAGE (ENCRYPTED)
     function loadLocalData() {
       try {
         const raw = localStorage.getItem('sgm_courier_db');
@@ -889,7 +887,6 @@ Mob:- 9403346235
       localStorage.setItem('sgm_courier_tok', enc);
     }
 
-    // CLOUD SYNC ENGINE (AES-256 CLOUD ENCRYPTED)
     function updateSyncBadge(status, label) {
       elements.syncDot.className = 'dot';
       if (status === 'syncing') elements.syncDot.classList.add('syncing');
@@ -953,7 +950,6 @@ Mob:- 9403346235
 
       try {
         updateSyncBadge('syncing', 'Encrypting & Syncing...');
-        
         const cipher = encryptPayload(state.entries);
         const cloudEnvelope = JSON.stringify({
           secured: true,
@@ -1080,43 +1076,33 @@ Mob:- 9403346235
       }
     }
 
-    // DYNAMIC FONT CALIBRATION ENGINE FOR TO & FROM (A6 PORTRAIT FIT)
-    function autoScalePrintFonts(toText, fromText) {
-      const toElem = document.getElementById('pTo');
-      const fromElem = document.getElementById('pFrom');
+    // ACCURATE CONTAINER-FILL AUTO-FONT ALGORITHM (ZERO UNNECESSARY WHITE SPACE)
+    function fitTextToBox(element, parentSection, minPt, maxPt) {
+      if (!element || !parentSection) return;
 
-      const toLen = (toText || '').trim().length;
-      const toLines = (toText || '').trim().split('\n').length;
+      const targetHeight = parentSection.clientHeight - 22; // label and margin adjustment
+      const targetWidth = parentSection.clientWidth;
 
-      const fromLen = (fromText || '').trim().length;
-      const fromLines = (fromText || '').trim().split('\n').length;
+      let low = minPt;
+      let high = maxPt;
+      let optimal = minPt;
 
-      // Smart dynamic scale for TO box
-      if (toLen > 240 || toLines > 7) {
-        toElem.style.fontSize = '9.5pt';
-        toElem.style.lineHeight = '1.15';
-      } else if (toLen > 160 || toLines > 5) {
-        toElem.style.fontSize = '11pt';
-        toElem.style.lineHeight = '1.2';
-      } else if (toLen > 100 || toLines > 4) {
-        toElem.style.fontSize = '12.5pt';
-        toElem.style.lineHeight = '1.22';
-      } else {
-        toElem.style.fontSize = '14pt';
-        toElem.style.lineHeight = '1.28';
+      // Iterative binary-fitting to find the maximum legible font that completely fills the space without overflowing
+      for (let i = 0; i < 18; i++) {
+        let mid = (low + high) / 2;
+        element.style.fontSize = mid + 'pt';
+        element.style.lineHeight = (mid * 1.25) + 'pt';
+
+        if (element.scrollHeight <= targetHeight && element.scrollWidth <= targetWidth) {
+          optimal = mid;
+          low = mid + 0.2; // Try larger font to eliminate white space
+        } else {
+          high = mid - 0.2; // Too big, step down
+        }
       }
 
-      // Smart dynamic scale for FROM box
-      if (fromLen > 200 || fromLines > 7) {
-        fromElem.style.fontSize = '8pt';
-        fromElem.style.lineHeight = '1.12';
-      } else if (fromLen > 130 || fromLines > 5) {
-        fromElem.style.fontSize = '9pt';
-        fromElem.style.lineHeight = '1.16';
-      } else {
-        fromElem.style.fontSize = '10pt';
-        fromElem.style.lineHeight = '1.22';
-      }
+      element.style.fontSize = optimal.toFixed(1) + 'pt';
+      element.style.lineHeight = (optimal * 1.24).toFixed(1) + 'pt';
     }
 
     function runPrint(rec) {
@@ -1127,8 +1113,26 @@ Mob:- 9403346235
       document.getElementById('pPartner').textContent = rec.partner ? `Courier: ${rec.partner}` : '';
       document.getElementById('pTrack').textContent = rec.tracking ? `Docket: ${rec.tracking}` : '';
 
-      // Auto-fit font sizes according to text bulk
-      autoScalePrintFonts(rec.to, rec.from);
+      const printSheet = document.getElementById('print-sheet');
+      
+      // Temporarily render container invisibly to read exact hardware dimensions
+      printSheet.style.display = 'flex';
+      printSheet.style.visibility = 'hidden';
+      printSheet.style.position = 'fixed';
+
+      const toElem = document.getElementById('pTo');
+      const fromElem = document.getElementById('pFrom');
+      const secTo = document.querySelector('.a6-section-to');
+      const secFrom = document.querySelector('.a6-section-from');
+
+      // Calculate perfect fill: minimum 8pt for heavy text, up to 21pt for short text
+      fitTextToBox(toElem, secTo, 8.5, 21.0);
+      fitTextToBox(fromElem, secFrom, 8.0, 16.0);
+
+      // Revert inline styles to allow @media print CSS to take charge
+      printSheet.style.display = '';
+      printSheet.style.visibility = '';
+      printSheet.style.position = '';
 
       window.print();
     }
@@ -1254,7 +1258,7 @@ Mob:- 9403346235
             <td style="text-align:right; white-space:nowrap;">
               <button class="btn btn-sm" onclick="actionPrint('${item.id}')" title="Print">🖨️</button>
               <button class="btn btn-sm" onclick="actionReuse('${item.id}')" title="Reuse">📋</button>
-              <button class="btn btn-sm" onclick="actionEdit('${item.id}')" title="Edit">✏️️</button>
+              <button class="btn btn-sm" onclick="actionEdit('${item.id}')" title="Edit">✏️</button>
               <button class="btn btn-sm" style="color:#ef4444;" onclick="actionDelete('${item.id}')" title="Delete">🗑️</button>
             </td>
           </tr>
