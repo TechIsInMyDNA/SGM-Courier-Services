@@ -3,25 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>SGM Courier Services - Hub & Print</title>
+  <title>SGM Courier Hub & Dispatch</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
   <style>
     :root {
-      --bg: #090d16;
-      --card-bg: rgba(18, 24, 38, 0.85);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --primary: #3b82f6;
-      --primary-hover: #2563eb;
-      --accent: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --text: #f3f4f6;
-      --text-muted: #9ca3af;
-      --input-bg: #0e1422;
-      --input-border: #1e293b;
-      --radius: 12px;
+      --bg: #0b0f19;
+      --panel: #131b2e;
+      --card: #18223a;
+      --border: #233050;
+      --border-focus: #3b82f6;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --emerald: #10b981;
+      --rose: #ef4444;
+      --amber: #f59e0b;
+      --text: #f8fafc;
+      --muted: #94a3b8;
     }
 
     * {
@@ -32,285 +31,227 @@
     }
 
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background: radial-gradient(circle at 10% 20%, #0d1527 0%, #060911 90%);
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* App Layout */
-    .app-wrapper {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 12px;
-      height: 100vh;
       display: flex;
       flex-direction: column;
-      gap: 12px;
     }
 
-    @media (max-width: 900px) {
-      .app-wrapper {
-        height: auto;
-        min-height: 100vh;
-        overflow-y: auto;
-        padding-bottom: 24px;
-      }
-    }
-
-    /* Header Bar */
+    /* Top Compact Nav */
     header {
-      background: var(--card-bg);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius);
-      padding: 8px 16px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-shrink: 0;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
+      flex-wrap: wrap;
       gap: 10px;
     }
 
-    .brand-icon {
-      width: 38px;
-      height: 38px;
-      background: linear-gradient(135deg, #2563eb, #3b82f6);
-      border-radius: 10px;
-      display: grid;
-      place-items: center;
-      font-size: 20px;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
-    }
-
-    .brand-info h1 {
-      font-size: 16px;
+    .brand-title {
+      font-size: 15px;
       font-weight: 800;
       letter-spacing: -0.3px;
-      background: linear-gradient(90deg, #fff, #93c5fd);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .sync-status {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #10b981;
-      box-shadow: 0 0 8px #10b981;
-      transition: all 0.3s ease;
-    }
-    .status-dot.syncing {
-      background: #f59e0b;
-      box-shadow: 0 0 8px #f59e0b;
-      animation: pulse 1s infinite alternate;
-    }
-    .status-dot.error {
-      background: #ef4444;
-      box-shadow: 0 0 8px #ef4444;
-    }
-
-    @keyframes pulse {
-      0% { opacity: 0.4; }
-      100% { opacity: 1; }
-    }
-
-    .top-actions {
       display: flex;
       align-items: center;
       gap: 8px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.04);
+      padding: 3px 8px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--emerald);
+    }
+    .dot.syncing { background: var(--amber); }
+    .dot.error { background: var(--rose); }
+
+    .nav-btns {
+      display: flex;
+      align-items: center;
+      gap: 6px;
       flex-wrap: wrap;
     }
 
     .btn {
-      padding: 7px 14px;
-      border-radius: 8px;
+      padding: 6px 12px;
+      border-radius: 6px;
       font-weight: 600;
       font-size: 12px;
-      border: none;
+      border: 1px solid transparent;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      transition: all 0.2s;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: white;
-    }
-    .btn-primary:hover {
-      background: linear-gradient(135deg, #3b82f6, #2563eb);
-      transform: translateY(-1px);
-    }
-
-    .btn-dark {
-      background: #1e293b;
+      gap: 5px;
+      background: var(--card);
       color: var(--text);
-      border: 1px solid rgba(255,255,255,0.06);
+      border-color: var(--border);
+      transition: all 0.15s ease;
     }
-    .btn-dark:hover {
-      background: #273549;
-    }
+    .btn:hover { background: #1e2c4c; border-color: #3b82f6; }
+    .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-emerald { background: #065f46; color: #a7f3d0; border-color: #047857; }
+    .btn-emerald:hover { background: #047857; }
+    .btn-sm { padding: 4px 8px; font-size: 11px; }
 
-    .btn-sm {
-      padding: 5px 9px;
-      font-size: 11px;
-    }
-
-    /* Main Grid */
-    .main-grid {
+    /* Layout */
+    .container {
       display: grid;
-      grid-template-columns: 390px 1fr;
-      gap: 12px;
+      grid-template-columns: 420px 1fr;
       flex: 1;
-      min-height: 0;
+      height: calc(100vh - 56px);
+      overflow: hidden;
     }
 
-    @media (max-width: 900px) {
-      .main-grid {
+    @media (max-width: 950px) {
+      .container {
         grid-template-columns: 1fr;
-        flex: none;
+        height: auto;
+        overflow: visible;
       }
     }
 
-    /* Left Panel: Creator / Editor */
-    .panel {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius);
+    /* Left Form Panel */
+    .form-panel {
+      background: var(--panel);
+      border-right: 1px solid var(--border);
       padding: 14px;
+      overflow-y: auto;
       display: flex;
       flex-direction: column;
       gap: 10px;
-      overflow-y: auto;
     }
 
-    .panel-title {
-      font-size: 13px;
+    .section-head {
+      font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: #93c5fd;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      padding-bottom: 6px;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 4px;
+      margin-top: 4px;
     }
 
-    .form-group {
+    .field {
       display: flex;
       flex-direction: column;
       gap: 4px;
     }
 
-    label {
+    .field label {
       font-size: 11px;
       font-weight: 600;
-      color: var(--text-muted);
+      color: var(--muted);
     }
 
     input, textarea, select {
-      background: var(--input-bg);
-      border: 1px solid var(--input-border);
-      border-radius: 8px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
       padding: 7px 10px;
       font-size: 12px;
       color: var(--text);
       font-family: inherit;
       outline: none;
-      transition: border-color 0.2s;
       width: 100%;
     }
 
     input:focus, textarea:focus, select:focus {
-      border-color: var(--primary);
+      border-color: var(--border-focus);
     }
 
     textarea {
       resize: vertical;
-      min-height: 52px;
+      line-height: 1.4;
     }
 
-    .row-2 {
+    .grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
     }
 
-    .wt-input-group {
+    .wt-field {
       display: grid;
-      grid-template-columns: 1fr 80px;
+      grid-template-columns: 1fr 85px;
       gap: 6px;
     }
 
-    /* Right Panel: Records & Ledger */
-    .records-panel {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius);
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      min-height: 0;
+    .form-actions {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+      padding-bottom: 10px;
     }
 
-    .stats-bar {
+    /* Right Table Panel */
+    .data-panel {
+      display: flex;
+      flex-direction: column;
+      padding: 14px;
+      gap: 10px;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    @media (max-width: 950px) {
+      .data-panel {
+        overflow: visible;
+      }
+    }
+
+    /* Stats strip */
+    .stats-row {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 8px;
     }
 
-    @media (max-width: 600px) {
-      .stats-bar {
-        grid-template-columns: repeat(2, 1fr);
-      }
+    @media (max-width: 650px) {
+      .stats-row { grid-template-columns: 1fr 1fr; }
     }
 
-    .stat-card {
-      background: rgba(14, 20, 34, 0.7);
-      border: 1px solid rgba(255,255,255,0.05);
-      border-radius: 8px;
-      padding: 8px 10px;
-    }
-    .stat-label {
-      font-size: 10px;
-      color: var(--text-muted);
-    }
-    .stat-val {
-      font-size: 15px;
-      font-weight: 700;
-      font-family: 'JetBrains Mono', monospace;
-      color: #fff;
+    .stat-box {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 12px;
     }
 
-    .filter-bar {
+    .stat-label { font-size: 10px; color: var(--muted); font-weight: 600; }
+    .stat-value { font-size: 15px; font-weight: 700; font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
+
+    /* Search & Filters */
+    .search-row {
       display: flex;
       gap: 8px;
     }
 
-    .records-table-wrap {
+    /* Table Container */
+    .table-box {
       flex: 1;
       overflow-y: auto;
-      border: 1px solid rgba(255,255,255,0.05);
-      border-radius: 8px;
-      background: rgba(11, 16, 28, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--panel);
     }
 
     table {
@@ -320,97 +261,80 @@
       text-align: left;
     }
 
-    th {
-      background: #111827;
-      padding: 9px 10px;
-      font-weight: 600;
-      color: var(--text-muted);
+    thead th {
       position: sticky;
       top: 0;
-      z-index: 2;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: #111726;
+      border-bottom: 1px solid var(--border);
+      padding: 8px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      z-index: 10;
     }
 
-    td {
-      padding: 9px 10px;
+    tbody td {
+      padding: 8px 10px;
       border-bottom: 1px solid rgba(255,255,255,0.04);
       vertical-align: middle;
     }
 
-    tr:hover {
-      background: rgba(255, 255, 255, 0.03);
-    }
+    tbody tr:hover { background: rgba(255,255,255,0.02); }
 
-    .badge {
-      display: inline-block;
-      padding: 2px 7px;
-      border-radius: 12px;
-      font-size: 10px;
-      font-weight: 600;
-    }
-    .badge-paid {
-      background: rgba(16, 185, 129, 0.2);
-      color: #34d399;
-      border: 1px solid rgba(16, 185, 129, 0.3);
-    }
-    .badge-due {
-      background: rgba(239, 68, 68, 0.2);
+    .tag-due {
+      background: rgba(239, 68, 68, 0.15);
       color: #f87171;
       border: 1px solid rgba(239, 68, 68, 0.3);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
     }
 
-    .action-icons {
-      display: flex;
-      gap: 5px;
+    .tag-paid {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
     }
 
-    /* Modal / Popups */
-    .modal-overlay {
+    /* Modal Styling */
+    .modal-wrap {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(5px);
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
       display: none;
       place-items: center;
-      z-index: 100;
+      z-index: 1000;
       padding: 16px;
     }
-    .modal-overlay.active {
-      display: grid;
-    }
+    .modal-wrap.open { display: grid; }
 
-    .modal-card {
-      background: #111827;
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 14px;
+    .modal-content {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
       width: 100%;
-      max-width: 480px;
-      padding: 20px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      max-width: 500px;
+      padding: 18px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
 
-    .modal-card h3 {
-      font-size: 16px;
+    .modal-content h3 {
+      font-size: 15px;
       font-weight: 700;
-      color: #93c5fd;
+      color: #fff;
     }
 
-    /* Backup / Restore Box */
-    .backup-box {
-      border: 1px dashed rgba(255,255,255,0.15);
-      background: rgba(15, 23, 42, 0.6);
-      border-radius: 8px;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    /* PRINT STYLES - STRICT A6 PORTRAIT FIT */
-    #print-container {
+    /* STRICT A6 PRINT FIT STYLES (105mm x 148mm) */
+    #print-sheet {
       display: none;
     }
 
@@ -418,10 +342,10 @@
       body * {
         visibility: hidden !important;
       }
-      #print-container, #print-container * {
+      #print-sheet, #print-sheet * {
         visibility: visible !important;
       }
-      #print-container {
+      #print-sheet {
         display: block !important;
         position: fixed;
         left: 0;
@@ -440,75 +364,71 @@
         margin: 0;
       }
 
-      .slip-box {
+      .a6-outer {
         width: 100%;
         height: 100%;
-        border: 2.2px solid #000;
-        border-radius: 4px;
+        border: 2px solid #000;
+        border-radius: 2px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         padding: 6px;
-        font-family: Arial, Helvetica, sans-serif;
         box-sizing: border-box;
+        font-family: Arial, sans-serif;
       }
 
-      .slip-header {
+      .a6-header {
+        border-bottom: 2px solid #000;
+        padding-bottom: 4px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border-bottom: 2px solid #000;
-        padding-bottom: 4px;
-        margin-bottom: 5px;
       }
 
-      .slip-title {
+      .a6-header h2 {
         font-size: 13pt;
         font-weight: 900;
-        letter-spacing: 0.5px;
+        margin: 0;
       }
 
-      .slip-date {
+      .a6-header span {
         font-size: 9pt;
         font-weight: bold;
       }
 
-      .slip-to-section {
-        flex: 1.3;
-        border-bottom: 1.5px dashed #000;
-        padding-bottom: 6px;
-        margin-bottom: 6px;
+      .a6-body {
+        flex: 1;
         display: flex;
         flex-direction: column;
+        justify-content: space-around;
+        padding: 4px 0;
       }
 
-      .slip-sec-tag {
+      .a6-section {
+        margin: 3px 0;
+      }
+
+      .a6-label {
         font-size: 9pt;
         font-weight: 900;
         text-decoration: underline;
-        margin-bottom: 3px;
-        display: inline-block;
+        margin-bottom: 2px;
       }
 
-      .slip-to-text {
-        font-size: 10pt;
+      .a6-text-to {
+        font-size: 10.5pt;
         font-weight: 700;
         line-height: 1.3;
         white-space: pre-wrap;
         word-break: break-word;
-        flex: 1;
       }
 
-      .slip-from-section {
-        flex: 1;
-        border-bottom: 1.5px solid #000;
-        padding-bottom: 5px;
-        margin-bottom: 5px;
-        display: flex;
-        flex-direction: column;
+      .a6-divider {
+        border-top: 1.5px dashed #000;
+        margin: 4px 0;
       }
 
-      .slip-from-text {
+      .a6-text-from {
         font-size: 8.5pt;
         font-weight: 600;
         line-height: 1.25;
@@ -516,68 +436,71 @@
         word-break: break-word;
       }
 
-      .slip-footer {
+      .a6-footer {
+        border-top: 1.8px solid #000;
+        padding-top: 4px;
         display: flex;
         justify-content: space-between;
         align-items: flex-end;
-        padding-top: 2px;
       }
 
-      .slip-weight-box {
+      .a6-wt {
         border: 1.8px solid #000;
-        padding: 4px 8px;
-        border-radius: 4px;
+        padding: 3px 6px;
+        border-radius: 3px;
         font-size: 9pt;
         font-weight: 900;
       }
 
-      .slip-meta-box {
-        text-align: right;
-        font-size: 7.5pt;
+      .a6-meta {
+        font-size: 8pt;
         font-weight: bold;
+        text-align: right;
       }
     }
   </style>
 </head>
 <body>
 
-<div class="app-wrapper">
-  <!-- Top Navigation Header -->
+  <!-- Top App Bar -->
   <header>
-    <div class="brand">
-      <div class="brand-icon">📦</div>
-      <div class="brand-info">
-        <h1>SGM Courier & Dispatch Master</h1>
-        <div class="sync-status">
-          <span class="status-dot" id="syncDot"></span>
-          <span id="syncText">Live Cloud Ready</span>
-        </div>
+    <div class="brand-title">
+      <span>📦</span> SGM Courier Hub
+      <div class="status-badge">
+        <span class="dot" id="syncDot"></span>
+        <span id="syncText">Live Cloud</span>
       </div>
     </div>
-    <div class="top-actions">
-      <button class="btn btn-dark" onclick="openLedgerModal()">📊 Ledger</button>
-      <button class="btn btn-dark" onclick="openBackupModal()">💾 Backup & Restore</button>
-      <button class="btn btn-dark" onclick="openSettingsModal()">⚙️ Settings</button>
-      <button class="btn btn-primary" onclick="resetForm()">➕ New Slip</button>
+    <div class="nav-btns">
+      <button class="btn" id="btnOpenLedger">📊 Ledger</button>
+      <button class="btn" id="btnOpenBackup">💾 Backup & Restore</button>
+      <button class="btn" id="btnOpenSettings">⚙️ Settings</button>
+      <button class="btn btn-primary" id="btnNewSlip">➕ New Slip</button>
     </div>
   </header>
 
-  <!-- Main Grid Workspace -->
-  <div class="main-grid">
-    <!-- Form Side -->
-    <div class="panel">
-      <div class="panel-title">
-        <span id="formModeTitle">Create Courier Label</span>
-        <button class="btn btn-dark btn-sm" onclick="clearToBox()">Clear TO</button>
+  <!-- Main Container -->
+  <div class="container">
+
+    <!-- Left Editor -->
+    <div class="form-panel">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span class="section-head" id="formModeTitle" style="border:none; margin:0;">Create Label</span>
+        <span id="activeEditingBadge" style="display:none; font-size:10px; color:#f59e0b; font-weight:700;">[EDIT MODE]</span>
       </div>
 
-      <div class="form-group">
-        <label>⚡ Quick Paste / Type TO (Recipient Details):</label>
-        <textarea id="toInput" rows="4" placeholder="Paste full address here...&#10;Customer Name, Street, City, Pincode, Mobile"></textarea>
+      <!-- TO Field -->
+      <div class="field">
+        <label>TO:</label>
+        <textarea id="toInput" rows="4" placeholder="Paste full recipient details here (Name, Full Address, Pincode, Mobile)..."></textarea>
+        <div style="display:flex; justify-content:flex-end; margin-top:2px;">
+          <button type="button" class="btn btn-sm" id="btnClearTo">Clear</button>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label>📍 FROM (Sender Details - Default):</label>
+      <!-- FROM Field -->
+      <div class="field">
+        <label>FROM (Default Sender):</label>
         <textarea id="fromInput" rows="4">Shree Ganesh Medicals
 Shop No. 6
 Indira Gandhi Stadium
@@ -586,15 +509,15 @@ Mob:- 9403346235
 9595989017</textarea>
       </div>
 
-      <div class="row-2">
-        <div class="form-group">
-          <label>📅 Slip Date (Dt):</label>
-          <input type="text" id="slipDate" value="">
+      <div class="grid-2">
+        <div class="field">
+          <label>Date (Dt):</label>
+          <input type="text" id="slipDate">
         </div>
-        <div class="form-group">
-          <label>⚖️ Package Weight:</label>
-          <div class="wt-input-group">
-            <input type="number" step="0.01" id="wtVal" placeholder="e.g. 500">
+        <div class="field">
+          <label>Package Weight:</label>
+          <div class="wt-field">
+            <input type="number" step="0.01" id="wtVal" placeholder="500">
             <select id="wtUnit">
               <option value="Gram">Gram</option>
               <option value="Kg">Kg</option>
@@ -603,770 +526,739 @@ Mob:- 9403346235
         </div>
       </div>
 
-      <div class="panel-title" style="margin-top: 4px;">
-        <span>Record & Ledger Meta (Future Use)</span>
-      </div>
+      <div class="section-head">Courier & Ledger Meta</div>
 
-      <div class="row-2">
-        <div class="form-group">
+      <div class="grid-2">
+        <div class="field">
           <label>Customer Name:</label>
-          <input type="text" id="custName" placeholder="For ledger...">
+          <input type="text" id="custName" placeholder="Ledger name">
         </div>
-        <div class="form-group">
-          <label>Destination City:</label>
-          <input type="text" id="custCity" placeholder="City / State">
+        <div class="field">
+          <label>City / Place:</label>
+          <input type="text" id="custCity" placeholder="Destination">
         </div>
       </div>
 
-      <div class="row-2">
-        <div class="form-group">
+      <div class="grid-2">
+        <div class="field">
           <label>Courier Partner:</label>
-          <input type="text" id="courierPartner" placeholder="e.g. DTDC / Trackon / Post">
+          <input type="text" id="courierPartner" placeholder="DTDC / Tirupati / Post">
         </div>
-        <div class="form-group">
+        <div class="field">
           <label>Tracking / AWB No:</label>
           <input type="text" id="trackingId" placeholder="Docket / Tracking ID">
         </div>
       </div>
 
-      <div class="row-2">
-        <div class="form-group">
+      <div class="grid-2">
+        <div class="field">
           <label>Courier Cost (Paid ₹):</label>
           <input type="number" id="courierCost" placeholder="0">
         </div>
-        <div class="form-group">
+        <div class="field">
           <label>Customer Bill (Charged ₹):</label>
           <input type="number" id="custBilled" placeholder="0">
         </div>
       </div>
 
-      <div class="row-2">
-        <div class="form-group">
-          <label>Payment Received (₹):</label>
+      <div class="grid-2">
+        <div class="field">
+          <label>Received Amount (₹):</label>
           <input type="number" id="custReceived" placeholder="0">
         </div>
-        <div class="form-group">
-          <label>Customer Status:</label>
+        <div class="field">
+          <label>Payment Status:</label>
           <select id="payStatus">
             <option value="PAID">PAID</option>
-            <option value="DUE">PAYMENT DUE</option>
+            <option value="DUE">DUE</option>
           </select>
         </div>
       </div>
 
-      <div style="display: flex; gap: 8px; margin-top: 4px;">
-        <button class="btn btn-primary" style="flex: 1;" onclick="saveEntryAndPrint(true)">💾 Save & Print A6</button>
-        <button class="btn btn-dark" style="flex: 1;" onclick="saveEntryAndPrint(false)">💾 Only Save</button>
+      <div class="form-actions">
+        <button type="button" class="btn btn-primary" id="btnSaveAndPrint">💾 Save & Print A6</button>
+        <button type="button" class="btn" id="btnSaveOnly">💾 Save Entry</button>
       </div>
     </div>
 
-    <!-- Records / History / Ledger Side -->
-    <div class="records-panel">
-      <!-- Mini Stats Header -->
-      <div class="stats-bar">
-        <div class="stat-card">
-          <div class="stat-label">Total Parcels</div>
-          <div class="stat-val" id="statTotal">0</div>
+    <!-- Right Content (Records & Stats) -->
+    <div class="data-panel">
+      <!-- Mini Stats Row -->
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-label">TOTAL ENTRIES</div>
+          <div class="stat-value" id="statCount">0</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-label">Total Billed</div>
-          <div class="stat-val" id="statBilled">₹0</div>
+        <div class="stat-box">
+          <div class="stat-label">TOTAL BILLED</div>
+          <div class="stat-value" id="statBilled">₹0</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-label">Received</div>
-          <div class="stat-val" id="statRecv">₹0</div>
+        <div class="stat-box">
+          <div class="stat-label">TOTAL RECEIVED</div>
+          <div class="stat-value" id="statRecv">₹0</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-label">Pending Due</div>
-          <div class="stat-val" style="color: #f87171;" id="statDue">₹0</div>
+        <div class="stat-box">
+          <div class="stat-label">TOTAL DUE</div>
+          <div class="stat-value" style="color:#f87171;" id="statDue">₹0</div>
         </div>
       </div>
 
-      <!-- Search & Filters -->
-      <div class="filter-bar">
-        <input type="text" id="searchInput" placeholder="🔍 Search by customer, city, tracking ID, address..." oninput="renderTable()">
-        <select id="statusFilter" style="max-width: 140px;" onchange="renderTable()">
+      <!-- Filter Controls -->
+      <div class="search-row">
+        <input type="text" id="tableSearch" placeholder="🔍 Search customer, city, tracking, address...">
+        <select id="statusFilter" style="max-width: 130px;">
           <option value="ALL">All Status</option>
           <option value="DUE">Only Due</option>
           <option value="PAID">Only Paid</option>
         </select>
       </div>
 
-      <!-- Table of records -->
-      <div class="records-table-wrap">
+      <!-- Records Table -->
+      <div class="table-box">
         <table>
           <thead>
             <tr>
               <th>Date</th>
               <th>Customer / City</th>
-              <th>Courier & Tracking</th>
+              <th>Courier & Docket</th>
               <th>Weight</th>
-              <th>Ledger (Due / Bill)</th>
-              <th style="text-align: right;">Action</th>
+              <th>Ledger</th>
+              <th style="text-align:right;">Actions</th>
             </tr>
           </thead>
-          <tbody id="recordsBody">
-            <!-- Populated via JS -->
-          </tbody>
+          <tbody id="tableBody"></tbody>
         </table>
       </div>
     </div>
   </div>
-</div>
 
-<!-- PRINT CONTAINER (Strictly formatted for 105mm x 148mm A6 Portrait) -->
-<div id="print-container">
-  <div class="slip-box">
-    <div class="slip-header">
-      <div class="slip-title">SPEED PARCEL / COURIER</div>
-      <div class="slip-date" id="pSlipDate">Dt: 04/10/2026</div>
-    </div>
-
-    <div class="slip-to-section">
-      <span class="slip-sec-tag">TO (RECIPIENT):</span>
-      <div class="slip-to-text" id="pSlipTo"></div>
-    </div>
-
-    <div class="slip-from-section">
-      <span class="slip-sec-tag">FROM (SENDER):</span>
-      <div class="slip-from-text" id="pSlipFrom"></div>
-    </div>
-
-    <div class="slip-footer">
-      <div class="slip-weight-box" id="pSlipWt">
-        WT: ---
+  <!-- A6 PRINT TEMPLATE -->
+  <div id="print-sheet">
+    <div class="a6-outer">
+      <div class="a6-header">
+        <h2>PARCEL / COURIER</h2>
+        <span id="pDate">Dt: --</span>
       </div>
-      <div class="slip-meta-box">
-        <span id="pSlipCourier"></span><br>
-        <span id="pSlipTracking"></span>
+      <div class="a6-body">
+        <div class="a6-section">
+          <div class="a6-label">TO:</div>
+          <div class="a6-text-to" id="pTo"></div>
+        </div>
+        <div class="a6-divider"></div>
+        <div class="a6-section">
+          <div class="a6-label">FROM:</div>
+          <div class="a6-text-from" id="pFrom"></div>
+        </div>
+      </div>
+      <div class="a6-footer">
+        <div class="a6-wt" id="pWt">WT: --</div>
+        <div class="a6-meta">
+          <div id="pPartner"></div>
+          <div id="pTrack"></div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- SETTINGS MODAL -->
-<div class="modal-overlay" id="settingsModal">
-  <div class="modal-card">
-    <h3>⚙️ Security & Cloud Sync Setup</h3>
-    <p style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">
-      Master Password dalein taaki encrypted GitHub live-sync config unlock ho sake: <code>TechIsInMyDNA/SGM-Courier-Services</code>.
-    </p>
+  <!-- SETTINGS MODAL -->
+  <div class="modal-wrap" id="modalSettings">
+    <div class="modal-content">
+      <h3>⚙️ Cloud Security Settings</h3>
+      <p style="font-size:11px; color:var(--muted);">Master password daal kar token configure karein. Repo: <code>TechIsInMyDNA/SGM-Courier-Services</code></p>
+      
+      <div class="field" id="passBlock">
+        <label>Master Password:</label>
+        <input type="password" id="passInput" placeholder="Password daaliye">
+      </div>
 
-    <div class="form-group">
-      <label>Master Password:</label>
-      <input type="password" id="masterPass" placeholder="Enter password to unlock">
-    </div>
-
-    <div id="unlockedSettings" style="display: none; flex-direction: column; gap: 10px;">
-      <div class="form-group">
+      <div class="field" id="tokenBlock" style="display:none;">
         <label>GitHub Personal Access Token (PAT):</label>
-        <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
-        <small style="font-size: 10px; color: #10b981;">Token local AES encrypted rahega, plain text show nahi hoga.</small>
+        <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxx">
+        <small style="font-size:10px; color:var(--emerald); margin-top:2px;">Token AES encrypted rahega, safe and protected.</small>
       </div>
-      <div class="form-group">
-        <label>Target Repository:</label>
-        <input type="text" id="ghRepo" value="TechIsInMyDNA/SGM-Courier-Services" readonly>
+
+      <div style="display:flex; justify-content:flex-end; gap:8px;">
+        <button class="btn" id="btnCloseSettings">Close</button>
+        <button class="btn btn-primary" id="btnUnlockSettings">Unlock</button>
+        <button class="btn btn-emerald" id="btnSaveToken" style="display:none;">Save Token</button>
       </div>
-      <button class="btn btn-primary" onclick="saveSettingsToken()">🔒 Save & Enable Military-Grade Live Sync</button>
-    </div>
-
-    <div style="display: flex; justify-content: flex-end; gap: 8px;">
-      <button class="btn btn-dark" onclick="closeSettingsModal()">Close</button>
-      <button class="btn btn-primary" id="btnUnlock" onclick="unlockSettings()">Verify Password</button>
     </div>
   </div>
-</div>
 
-<!-- BACKUP & RESTORE MODAL -->
-<div class="modal-overlay" id="backupModal">
-  <div class="modal-card">
-    <h3>💾 Backup & Restore (JSON)</h3>
-    <p style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">
-      Apna pura courier database local disk par backup karein ya JSON file se instantly restore karein.
-    </p>
+  <!-- BACKUP & RESTORE MODAL -->
+  <div class="modal-wrap" id="modalBackup">
+    <div class="modal-content">
+      <h3>💾 Backup & Restore</h3>
+      <div style="display:flex; flex-direction:column; gap:8px; border:1px dashed var(--border); padding:10px; border-radius:6px;">
+        <strong style="font-size:12px;">📥 Download Backup JSON</strong>
+        <p style="font-size:11px; color:var(--muted);">Sara courier database ek file me save karein.</p>
+        <button class="btn btn-primary btn-sm" id="btnExportJSON">Download JSON</button>
+      </div>
 
-    <!-- Export Section -->
-    <div class="backup-box">
-      <strong style="font-size: 12px; color: #93c5fd;">📥 Download Backup:</strong>
-      <p style="font-size: 11px; color: var(--text-muted);">Pura local data JSON format me safe file me save ho jayega.</p>
-      <button class="btn btn-primary btn-sm" onclick="exportDataJSON()">Download data.json Backup</button>
-    </div>
+      <div style="display:flex; flex-direction:column; gap:8px; border:1px dashed var(--border); padding:10px; border-radius:6px;">
+        <strong style="font-size:12px;">📤 Restore Backup JSON</strong>
+        <p style="font-size:11px; color:var(--muted);">Apni purani backup file select karein.</p>
+        <input type="file" id="importFile" accept=".json">
+        <button class="btn btn-emerald btn-sm" id="btnImportJSON">Restore File</button>
+      </div>
 
-    <!-- Import Section -->
-    <div class="backup-box">
-      <strong style="font-size: 12px; color: #34d399;">📤 Restore from Backup:</strong>
-      <p style="font-size: 11px; color: var(--text-muted);">Apni pehle se saved JSON file select karke restore karein (Auto cloud sync ho jayega).</p>
-      <input type="file" id="importFileInput" accept=".json" style="padding: 4px;">
-      <button class="btn btn-dark btn-sm" style="background: #2563eb; color: #fff;" onclick="importDataJSON()">Upload & Restore</button>
-    </div>
-
-    <div style="display: flex; justify-content: flex-end;">
-      <button class="btn btn-dark" onclick="closeBackupModal()">Close</button>
+      <div style="display:flex; justify-content:flex-end;">
+        <button class="btn" id="btnCloseBackup">Close</button>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- LEDGER SUMMARY MODAL -->
-<div class="modal-overlay" id="ledgerModal">
-  <div class="modal-card" style="max-width: 650px;">
-    <h3>📊 Customer Running Ledger</h3>
-    <div style="max-height: 350px; overflow-y: auto;" id="ledgerContent">
-      <!-- Populated via JS -->
-    </div>
-    <div style="display: flex; justify-content: flex-end;">
-      <button class="btn btn-dark" onclick="closeLedgerModal()">Close</button>
+  <!-- LEDGER MODAL -->
+  <div class="modal-wrap" id="modalLedger">
+    <div class="modal-content" style="max-width:600px;">
+      <h3>📊 Customer Running Ledger</h3>
+      <div style="max-height:360px; overflow-y:auto; border:1px solid var(--border); border-radius:6px;" id="ledgerContent"></div>
+      <div style="display:flex; justify-content:flex-end;">
+        <button class="btn" id="btnCloseLedger">Close</button>
+      </div>
     </div>
   </div>
-</div>
 
-<script>
-// HARDCODED CONSTANTS & STATE
-const REPO_OWNER = 'TechIsInMyDNA';
-const REPO_NAME = 'SGM-Courier-Services';
-const FILE_PATH = 'data.json';
-const MASTER_KEY = 'Courier@144';
+  <script>
+    // HARDCODED CONSTANTS
+    const REPO_OWNER = 'TechIsInMyDNA';
+    const REPO_NAME = 'SGM-Courier-Services';
+    const FILE_PATH = 'data.json';
+    const MASTER_KEY = 'Courier@144';
 
-let state = {
-  entries: [],
-  activeEditId: null,
-  sha: null,
-  isSyncing: false
-};
-
-// INITIALIZE APP
-window.addEventListener('DOMContentLoaded', () => {
-  setDefaultDate();
-  loadLocalState();
-  renderTable();
-  initAutoSync();
-});
-
-function setDefaultDate() {
-  const d = new Date();
-  const day = String(d.getDate()).padStart(2, '0');
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const year = d.getFullYear();
-  document.getElementById('slipDate').value = `${day}/${month}/${year}`;
-}
-
-// STORAGE & ENCRYPTION
-function loadLocalState() {
-  try {
-    const raw = localStorage.getItem('sgm_courier_local');
-    if (raw) {
-      state.entries = JSON.parse(raw);
-    }
-  } catch (e) {
-    console.error(e);
-  }
-}
-
-function saveLocalState() {
-  localStorage.setItem('sgm_courier_local', JSON.stringify(state.entries));
-}
-
-function getEncryptedToken() {
-  const enc = localStorage.getItem('sgm_enc_token');
-  if (!enc) return null;
-  try {
-    const bytes = CryptoJS.AES.decrypt(enc, MASTER_KEY);
-    return bytes.toString(CryptoJS.enc.Utf8);
-  } catch (e) {
-    return null;
-  }
-}
-
-function setEncryptedToken(token) {
-  const enc = CryptoJS.AES.encrypt(token.trim(), MASTER_KEY).toString();
-  localStorage.setItem('sgm_enc_token', enc);
-}
-
-// SETTINGS MODAL LOGIC
-function openSettingsModal() {
-  document.getElementById('settingsModal').classList.add('active');
-  document.getElementById('masterPass').value = '';
-  document.getElementById('unlockedSettings').style.display = 'none';
-  document.getElementById('btnUnlock').style.display = 'block';
-}
-
-function closeSettingsModal() {
-  document.getElementById('settingsModal').classList.remove('active');
-}
-
-function unlockSettings() {
-  const pass = document.getElementById('masterPass').value;
-  if (pass === MASTER_KEY) {
-    document.getElementById('unlockedSettings').style.display = 'flex';
-    document.getElementById('btnUnlock').style.display = 'none';
-    const curr = getEncryptedToken();
-    if (curr) {
-      document.getElementById('ghToken').value = curr;
-    }
-  } else {
-    alert('Galat Password! Kripya sahi master password dalein.');
-  }
-}
-
-function saveSettingsToken() {
-  const token = document.getElementById('ghToken').value;
-  if (!token) {
-    alert('Token daliye!');
-    return;
-  }
-  setEncryptedToken(token);
-  closeSettingsModal();
-  updateSyncUI('syncing', 'Connecting Cloud...');
-  syncFromCloud();
-}
-
-// BACKUP & RESTORE LOGIC
-function openBackupModal() {
-  document.getElementById('backupModal').classList.add('active');
-}
-
-function closeBackupModal() {
-  document.getElementById('backupModal').classList.remove('active');
-}
-
-function exportDataJSON() {
-  const jsonStr = JSON.stringify(state.entries, null, 2);
-  const blob = new Blob([jsonStr], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  const d = new Date().toISOString().slice(0, 10);
-  a.href = url;
-  a.download = `SGM_Courier_Backup_${d}.json`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
-
-function importDataJSON() {
-  const fileInput = document.getElementById('importFileInput');
-  const file = fileInput.files[0];
-  if (!file) {
-    alert('Kripya pehle JSON file choose karein!');
-    return;
-  }
-
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      const data = JSON.parse(e.target.result);
-      if (Array.isArray(data)) {
-        if (confirm(`Is file me ${data.length} records hain. Kya aap inko restore karna chahte hain?`)) {
-          state.entries = data;
-          saveLocalState();
-          renderTable();
-          pushToCloud();
-          alert('Data kamyabi ke saath restore aur sync ho gaya!');
-          closeBackupModal();
-        }
-      } else {
-        alert('File format galat hai. Valid JSON array hona chahiye.');
-      }
-    } catch (err) {
-      alert('File parse karne me galti hui: ' + err.message);
-    }
-  };
-  reader.readAsText(file);
-}
-
-// REALTIME LIVE CLOUD SYNC ENGINE
-function updateSyncUI(status, text) {
-  const dot = document.getElementById('syncDot');
-  const txt = document.getElementById('syncText');
-  dot.className = 'status-dot';
-  if (status === 'syncing') dot.classList.add('syncing');
-  if (status === 'error') dot.classList.add('error');
-  txt.textContent = text;
-}
-
-async function syncFromCloud() {
-  const token = getEncryptedToken();
-  if (!token) {
-    updateSyncUI('ready', 'Local Mode (Cloud Settings Needed)');
-    return;
-  }
-
-  try {
-    updateSyncUI('syncing', 'Syncing...');
-    const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}?_=${Date.now()}`;
-    const res = await fetch(url, {
-      headers: {
-        'Authorization': `token ${token}`,
-        'Accept': 'application/vnd.github.v3+json'
-      }
-    });
-
-    if (res.status === 200) {
-      const data = await res.json();
-      state.sha = data.sha;
-      const content = decodeURIComponent(escape(atob(data.content)));
-      const parsed = JSON.parse(content);
-      if (Array.isArray(parsed)) {
-        state.entries = parsed;
-        saveLocalState();
-        renderTable();
-      }
-      updateSyncUI('ready', 'Live Cloud Synced');
-    } else if (res.status === 404) {
-      // First time initialization
-      await pushToCloud();
-    } else {
-      updateSyncUI('error', 'Cloud Auth / Sync Error');
-    }
-  } catch (err) {
-    console.error(err);
-    updateSyncUI('error', 'Network / Sync Error');
-  }
-}
-
-async function pushToCloud() {
-  const token = getEncryptedToken();
-  if (!token) return;
-
-  try {
-    updateSyncUI('syncing', 'Pushing Live...');
-    const contentStr = unescape(encodeURIComponent(JSON.stringify(state.entries, null, 2)));
-    const b64Content = btoa(contentStr);
-
-    const body = {
-      message: `Sync updates: ${new Date().toISOString()}`,
-      content: b64Content
+    // APP STATE
+    let state = {
+      entries: [],
+      editingId: null,
+      sha: null
     };
-    if (state.sha) {
-      body.sha = state.sha;
-    }
 
-    const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`;
-    const res = await fetch(url, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `token ${token}`,
-        'Accept': 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
+    // DOM ELEMENTS
+    const elements = {
+      toInput: document.getElementById('toInput'),
+      fromInput: document.getElementById('fromInput'),
+      slipDate: document.getElementById('slipDate'),
+      wtVal: document.getElementById('wtVal'),
+      wtUnit: document.getElementById('wtUnit'),
+      custName: document.getElementById('custName'),
+      custCity: document.getElementById('custCity'),
+      courierPartner: document.getElementById('courierPartner'),
+      trackingId: document.getElementById('trackingId'),
+      courierCost: document.getElementById('courierCost'),
+      custBilled: document.getElementById('custBilled'),
+      custReceived: document.getElementById('custReceived'),
+      payStatus: document.getElementById('payStatus'),
+      tableBody: document.getElementById('tableBody'),
+      tableSearch: document.getElementById('tableSearch'),
+      statusFilter: document.getElementById('statusFilter'),
+      syncDot: document.getElementById('syncDot'),
+      syncText: document.getElementById('syncText'),
+      formModeTitle: document.getElementById('formModeTitle'),
+      activeEditingBadge: document.getElementById('activeEditingBadge')
+    };
+
+    // ON DOM LOAD
+    window.addEventListener('DOMContentLoaded', () => {
+      initDate();
+      loadLocalData();
+      renderUI();
+      bindEvents();
+      initSync();
     });
 
-    if (res.ok) {
-      const respData = await res.json();
-      state.sha = respData.content.sha;
-      updateSyncUI('ready', 'Live Cloud Synced');
-    } else {
-      updateSyncUI('error', 'Cloud Push Failed');
+    function initDate() {
+      const d = new Date();
+      elements.slipDate.value = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
     }
-  } catch (e) {
-    console.error(e);
-    updateSyncUI('error', 'Push Error');
-  }
-}
 
-function initAutoSync() {
-  syncFromCloud();
-  setInterval(() => {
-    syncFromCloud();
-  }, 12000);
-}
-
-// FORM ACTIONS & PRINTING
-function clearToBox() {
-  document.getElementById('toInput').value = '';
-  document.getElementById('custName').value = '';
-  document.getElementById('custCity').value = '';
-}
-
-function resetForm() {
-  state.activeEditId = null;
-  document.getElementById('formModeTitle').textContent = 'Create Courier Label';
-  document.getElementById('toInput').value = '';
-  document.getElementById('custName').value = '';
-  document.getElementById('custCity').value = '';
-  document.getElementById('courierPartner').value = '';
-  document.getElementById('trackingId').value = '';
-  document.getElementById('courierCost').value = '';
-  document.getElementById('custBilled').value = '';
-  document.getElementById('custReceived').value = '';
-  document.getElementById('wtVal').value = '';
-  document.getElementById('payStatus').value = 'PAID';
-  setDefaultDate();
-}
-
-function saveEntryAndPrint(doPrint) {
-  const toText = document.getElementById('toInput').value.trim();
-  const fromText = document.getElementById('fromInput').value.trim();
-  const date = document.getElementById('slipDate').value.trim();
-  const wtVal = document.getElementById('wtVal').value.trim();
-  const wtUnit = document.getElementById('wtUnit').value;
-
-  if (!toText) {
-    alert('Kripya TO box me address enter karein!');
-    return;
-  }
-
-  let custName = document.getElementById('custName').value.trim();
-  let custCity = document.getElementById('custCity').value.trim();
-
-  // If customer name / city empty, auto extract from TO address
-  if (!custName) {
-    const lines = toText.split('
-');
-    custName = lines[0] ? lines[0].substring(0, 30) : 'Valued Customer';
-  }
-
-  const billed = parseFloat(document.getElementById('custBilled').value) || 0;
-  const received = parseFloat(document.getElementById('custReceived').value) || 0;
-  const courierCost = parseFloat(document.getElementById('courierCost').value) || 0;
-
-  const entry = {
-    id: state.activeEditId || 'sgm_' + Date.now(),
-    date: date,
-    to: toText,
-    from: fromText,
-    wt: wtVal ? `${wtVal} ${wtUnit}` : 'N/A',
-    custName: custName,
-    custCity: custCity,
-    courierPartner: document.getElementById('courierPartner').value.trim(),
-    trackingId: document.getElementById('trackingId').value.trim(),
-    cost: courierCost,
-    billed: billed,
-    received: received,
-    due: (billed - received) > 0 ? (billed - received) : 0,
-    status: document.getElementById('payStatus').value,
-    timestamp: Date.now()
-  };
-
-  if (state.activeEditId) {
-    const idx = state.entries.findIndex(e => e.id === state.activeEditId);
-    if (idx !== -1) {
-      state.entries[idx] = entry;
+    // LOCAL STORAGE & AES ENCRYPTION
+    function loadLocalData() {
+      try {
+        const raw = localStorage.getItem('sgm_courier_db');
+        if (raw) state.entries = JSON.parse(raw);
+      } catch (e) {
+        state.entries = [];
+      }
     }
-  } else {
-    state.entries.unshift(entry);
-  }
 
-  saveLocalState();
-  renderTable();
-  pushToCloud();
-
-  if (doPrint) {
-    printSlip(entry);
-  } else {
-    resetForm();
-  }
-}
-
-function printSlip(entry) {
-  document.getElementById('pSlipDate').textContent = `Dt: ${entry.date || ''}`;
-  document.getElementById('pSlipTo').textContent = entry.to || '';
-  document.getElementById('pSlipFrom').textContent = entry.from || '';
-  document.getElementById('pSlipWt').textContent = `WT: ${entry.wt || '---'}`;
-  document.getElementById('pSlipCourier').textContent = entry.courierPartner ? `Courier: ${entry.courierPartner}` : '';
-  document.getElementById('pSlipTracking').textContent = entry.trackingId ? `Tracking: ${entry.trackingId}` : '';
-
-  window.print();
-}
-
-function quickPrint(id) {
-  const item = state.entries.find(e => e.id === id);
-  if (item) {
-    printSlip(item);
-  }
-}
-
-function editEntry(id) {
-  const item = state.entries.find(e => e.id === id);
-  if (!item) return;
-
-  state.activeEditId = item.id;
-  document.getElementById('formModeTitle').textContent = 'Edit Slip & Ledger';
-  document.getElementById('toInput').value = item.to || '';
-  document.getElementById('fromInput').value = item.from || '';
-  document.getElementById('slipDate').value = item.date || '';
-
-  if (item.wt && item.wt.includes(' ')) {
-    const parts = item.wt.split(' ');
-    document.getElementById('wtVal').value = parts[0] || '';
-    document.getElementById('wtUnit').value = parts[1] || 'Gram';
-  } else {
-    document.getElementById('wtVal').value = '';
-  }
-
-  document.getElementById('custName').value = item.custName || '';
-  document.getElementById('custCity').value = item.custCity || '';
-  document.getElementById('courierPartner').value = item.courierPartner || '';
-  document.getElementById('trackingId').value = item.trackingId || '';
-  document.getElementById('courierCost').value = item.cost || '';
-  document.getElementById('custBilled').value = item.billed || '';
-  document.getElementById('custReceived').value = item.received || '';
-  document.getElementById('payStatus').value = item.status || 'PAID';
-
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function deleteEntry(id) {
-  if (confirm('Kya aap yeh entry delete karna chahte hain?')) {
-    state.entries = state.entries.filter(e => e.id !== id);
-    saveLocalState();
-    renderTable();
-    pushToCloud();
-    if (state.activeEditId === id) {
-      resetForm();
+    function saveLocalData() {
+      localStorage.setItem('sgm_courier_db', JSON.stringify(state.entries));
     }
-  }
-}
 
-function reuseAddress(id) {
-  const item = state.entries.find(e => e.id === id);
-  if (!item) return;
-  resetForm();
-  document.getElementById('toInput').value = item.to || '';
-  document.getElementById('custName').value = item.custName || '';
-  document.getElementById('custCity').value = item.custCity || '';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
+    function getDecryptedToken() {
+      const enc = localStorage.getItem('sgm_courier_tok');
+      if (!enc) return null;
+      try {
+        const bytes = CryptoJS.AES.decrypt(enc, MASTER_KEY);
+        return bytes.toString(CryptoJS.enc.Utf8);
+      } catch (e) {
+        return null;
+      }
+    }
 
-// RENDER TABLE & STATS
-function renderTable() {
-  const tbody = document.getElementById('recordsBody');
-  const search = document.getElementById('searchInput').value.toLowerCase();
-  const filter = document.getElementById('statusFilter').value;
+    function setEncryptedToken(token) {
+      const enc = CryptoJS.AES.encrypt(token.trim(), MASTER_KEY).toString();
+      localStorage.setItem('sgm_courier_tok', enc);
+    }
 
-  let totalBilled = 0;
-  let totalRecv = 0;
-  let totalDue = 0;
+    // CLOUD SYNC
+    function updateSyncBadge(status, label) {
+      elements.syncDot.className = 'dot';
+      if (status === 'syncing') elements.syncDot.classList.add('syncing');
+      if (status === 'error') elements.syncDot.classList.add('error');
+      elements.syncText.textContent = label;
+    }
 
-  const filtered = state.entries.filter(item => {
-    totalBilled += (item.billed || 0);
-    totalRecv += (item.received || 0);
-    totalDue += ((item.billed || 0) - (item.received || 0) > 0 ? (item.billed - item.received) : 0);
+    async function syncFromGitHub() {
+      const token = getDecryptedToken();
+      if (!token) {
+        updateSyncBadge('local', 'Local Mode');
+        return;
+      }
 
-    const matchText = (
-      (item.custName || '') +
-      (item.custCity || '') +
-      (item.to || '') +
-      (item.trackingId || '') +
-      (item.courierPartner || '')
-    ).toLowerCase();
+      try {
+        updateSyncBadge('syncing', 'Syncing...');
+        const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}?_=${Date.now()}`;
+        const res = await fetch(url, {
+          headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        });
 
-    const matchesSearch = matchText.includes(search);
-    const matchesStatus = filter === 'ALL' ? true :
-      filter === 'DUE' ? (item.due > 0 || item.status === 'DUE') :
-      (item.due === 0 && item.status === 'PAID');
+        if (res.status === 200) {
+          const data = await res.json();
+          state.sha = data.sha;
+          const parsed = JSON.parse(decodeURIComponent(escape(atob(data.content))));
+          if (Array.isArray(parsed)) {
+            state.entries = parsed;
+            saveLocalData();
+            renderUI();
+          }
+          updateSyncBadge('ready', 'Live Cloud');
+        } else if (res.status === 404) {
+          await pushToGitHub();
+        } else {
+          updateSyncBadge('error', 'Auth/API Error');
+        }
+      } catch (err) {
+        updateSyncBadge('error', 'Network Error');
+      }
+    }
 
-    return matchesSearch && matchesStatus;
-  });
+    async function pushToGitHub() {
+      const token = getDecryptedToken();
+      if (!token) return;
 
-  document.getElementById('statTotal').textContent = state.entries.length;
-  document.getElementById('statBilled').textContent = `₹${totalBilled}`;
-  document.getElementById('statRecv').textContent = `₹${totalRecv}`;
-  document.getElementById('statDue').textContent = `₹${totalDue}`;
+      try {
+        updateSyncBadge('syncing', 'Pushing Live...');
+        const jsonText = JSON.stringify(state.entries, null, 2);
+        const b64 = btoa(unescape(encodeURIComponent(jsonText)));
 
-  if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 24px;">Koi record nahi mila.</td></tr>`;
-    return;
-  }
+        const payload = {
+          message: `Live Sync ${new Date().toISOString()}`,
+          content: b64
+        };
+        if (state.sha) payload.sha = state.sha;
 
-  tbody.innerHTML = filtered.map(item => {
-    const isDue = (item.billed - item.received) > 0;
-    const badgeClass = isDue ? 'badge-due' : 'badge-paid';
-    const badgeText = isDue ? `Due: ₹${item.billed - item.received}` : 'Paid';
+        const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
 
-    return `
-      <tr>
-        <td style="white-space: nowrap; font-size: 11px;">
-          <strong>${item.date || 'N/A'}</strong>
-        </td>
-        <td>
-          <div style="font-weight: 700; color: #fff;">${item.custName || 'N/A'}</div>
-          <div style="font-size: 10px; color: var(--text-muted);">${item.custCity || ''}</div>
-        </td>
-        <td>
-          <div style="font-weight: 600; color: #93c5fd;">${item.courierPartner || '---'}</div>
-          <div style="font-size: 10px; font-family: monospace;">${item.trackingId || 'No Track ID'}</div>
-        </td>
-        <td style="white-space: nowrap; font-weight: 600;">${item.wt || '---'}</td>
-        <td>
-          <span class="badge ${badgeClass}">${badgeText}</span>
-          <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">Bill: ₹${item.billed || 0}</div>
-        </td>
-        <td style="text-align: right;">
-          <div class="action-icons" style="justify-content: flex-end;">
-            <button class="btn btn-dark btn-sm" title="Direct A6 Print" onclick="quickPrint('${item.id}')">🖨️</button>
-            <button class="btn btn-dark btn-sm" title="Reuse Address" onclick="reuseAddress('${item.id}')">📋</button>
-            <button class="btn btn-dark btn-sm" title="Edit" onclick="editEntry('${item.id}')">✏️</button>
-            <button class="btn btn-dark btn-sm" style="color: #ef4444;" title="Delete" onclick="deleteEntry('${item.id}')">🗑️</button>
-          </div>
-        </td>
-      </tr>
-    `;
-  }).join('');
-}
+        if (res.ok) {
+          const resp = await res.json();
+          state.sha = resp.content.sha;
+          updateSyncBadge('ready', 'Live Cloud');
+        } else {
+          updateSyncBadge('error', 'Push Failed');
+        }
+      } catch (e) {
+        updateSyncBadge('error', 'Sync Failed');
+      }
+    }
 
-// LEDGER MODAL
-function openLedgerModal() {
-  const container = document.getElementById('ledgerContent');
-  const ledgerMap = {};
+    function initSync() {
+      syncFromGitHub();
+      setInterval(syncFromGitHub, 12000);
+    }
 
-  state.entries.forEach(e => {
-    const key = (e.custName || 'Unknown').trim();
-    if (!ledgerMap[key]) {
-      ledgerMap[key] = {
-        name: key,
-        city: e.custCity || '',
-        count: 0,
-        billed: 0,
-        received: 0,
-        due: 0
+    // FORM RESET & DATA BINDING
+    function resetForm() {
+      state.editingId = null;
+      elements.formModeTitle.textContent = 'Create Label';
+      elements.activeEditingBadge.style.display = 'none';
+      elements.toInput.value = '';
+      elements.custName.value = '';
+      elements.custCity.value = '';
+      elements.courierPartner.value = '';
+      elements.trackingId.value = '';
+      elements.courierCost.value = '';
+      elements.custBilled.value = '';
+      elements.custReceived.value = '';
+      elements.wtVal.value = '';
+      elements.payStatus.value = 'PAID';
+      initDate();
+    }
+
+    function handleSave(triggerPrint) {
+      const toVal = elements.toInput.value.trim();
+      const fromVal = elements.fromInput.value.trim();
+      const dateVal = elements.slipDate.value.trim();
+      const wtNum = elements.wtVal.value.trim();
+      const wtUnit = elements.wtUnit.value;
+
+      if (!toVal) {
+        alert('Kripya TO address enter karein!');
+        elements.toInput.focus();
+        return;
+      }
+
+      let cName = elements.custName.value.trim();
+      let cCity = elements.custCity.value.trim();
+
+      if (!cName) {
+        const firstLine = toVal.split('\n')[0];
+        cName = firstLine ? firstLine.substring(0, 30) : 'Customer';
+      }
+
+      const billed = parseFloat(elements.custBilled.value) || 0;
+      const recv = parseFloat(elements.custReceived.value) || 0;
+      const due = (billed - recv) > 0 ? (billed - recv) : 0;
+
+      const record = {
+        id: state.editingId || 'sgm_' + Date.now(),
+        date: dateVal,
+        to: toVal,
+        from: fromVal,
+        wt: wtNum ? `${wtNum} ${wtUnit}` : '---',
+        custName: cName,
+        custCity: cCity,
+        partner: elements.courierPartner.value.trim(),
+        tracking: elements.trackingId.value.trim(),
+        cost: parseFloat(elements.courierCost.value) || 0,
+        billed: billed,
+        received: recv,
+        due: due,
+        status: elements.payStatus.value
       };
+
+      if (state.editingId) {
+        const idx = state.entries.findIndex(x => x.id === state.editingId);
+        if (idx !== -1) state.entries[idx] = record;
+      } else {
+        state.entries.unshift(record);
+      }
+
+      saveLocalData();
+      renderUI();
+      pushToGitHub();
+
+      if (triggerPrint) {
+        runPrint(record);
+      } else {
+        resetForm();
+      }
     }
-    ledgerMap[key].count += 1;
-    ledgerMap[key].billed += (e.billed || 0);
-    ledgerMap[key].received += (e.received || 0);
-  });
 
-  const list = Object.values(ledgerMap);
-  list.forEach(c => {
-    c.due = c.billed - c.received;
-  });
+    function runPrint(rec) {
+      document.getElementById('pDate').textContent = `Dt: ${rec.date || ''}`;
+      document.getElementById('pTo').textContent = rec.to || '';
+      document.getElementById('pFrom').textContent = rec.from || '';
+      document.getElementById('pWt').textContent = `WT: ${rec.wt || '---'}`;
+      document.getElementById('pPartner').textContent = rec.partner ? `Courier: ${rec.partner}` : '';
+      document.getElementById('pTrack').textContent = rec.tracking ? `Docket: ${rec.tracking}` : '';
+      window.print();
+    }
 
-  if (list.length === 0) {
-    container.innerHTML = `<p style="color: var(--text-muted); padding: 10px;">Ledger me abhi koi data nahi hai.</p>`;
-  } else {
-    container.innerHTML = `
-      <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
-        <thead>
-          <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
-            <th style="padding: 6px;">Customer</th>
-            <th style="padding: 6px;">Parcels</th>
-            <th style="padding: 6px;">Total Billed</th>
-            <th style="padding: 6px;">Received</th>
-            <th style="padding: 6px;">Balance Due</th>
+    // ACTIONS: EDIT / DELETE / REUSE / PRINT
+    window.actionPrint = function(id) {
+      const rec = state.entries.find(x => x.id === id);
+      if (rec) runPrint(rec);
+    };
+
+    window.actionReuse = function(id) {
+      const rec = state.entries.find(x => x.id === id);
+      if (!rec) return;
+      resetForm();
+      elements.toInput.value = rec.to || '';
+      elements.custName.value = rec.custName || '';
+      elements.custCity.value = rec.custCity || '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.actionEdit = function(id) {
+      const rec = state.entries.find(x => x.id === id);
+      if (!rec) return;
+
+      state.editingId = rec.id;
+      elements.formModeTitle.textContent = 'Edit Slip';
+      elements.activeEditingBadge.style.display = 'inline';
+
+      elements.toInput.value = rec.to || '';
+      elements.fromInput.value = rec.from || '';
+      elements.slipDate.value = rec.date || '';
+
+      if (rec.wt && rec.wt.includes(' ')) {
+        const p = rec.wt.split(' ');
+        elements.wtVal.value = p[0];
+        elements.wtUnit.value = p[1];
+      } else {
+        elements.wtVal.value = '';
+      }
+
+      elements.custName.value = rec.custName || '';
+      elements.custCity.value = rec.custCity || '';
+      elements.courierPartner.value = rec.partner || '';
+      elements.trackingId.value = rec.tracking || '';
+      elements.courierCost.value = rec.cost || '';
+      elements.custBilled.value = rec.billed || '';
+      elements.custReceived.value = rec.received || '';
+      elements.payStatus.value = rec.status || 'PAID';
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.actionDelete = function(id) {
+      if (confirm('Kya aap yeh entry delete karna chahte hain?')) {
+        state.entries = state.entries.filter(x => x.id !== id);
+        saveLocalData();
+        renderUI();
+        pushToGitHub();
+        if (state.editingId === id) resetForm();
+      }
+    };
+
+    // RENDER TABLE & STATS
+    function renderUI() {
+      const filter = elements.statusFilter.value;
+      const q = elements.tableSearch.value.toLowerCase().trim();
+
+      let totBilled = 0, totRecv = 0, totDue = 0;
+
+      const filtered = state.entries.filter(item => {
+        totBilled += (item.billed || 0);
+        totRecv += (item.received || 0);
+        totDue += (item.due || 0);
+
+        const matchText = `${item.custName} ${item.custCity} ${item.tracking} ${item.to} ${item.partner}`.toLowerCase();
+        const matchesQ = matchText.includes(q);
+
+        const matchesStatus = (filter === 'ALL') ? true :
+          (filter === 'DUE') ? (item.due > 0 || item.status === 'DUE') :
+          (item.due === 0 && item.status === 'PAID');
+
+        return matchesQ && matchesStatus;
+      });
+
+      document.getElementById('statCount').textContent = state.entries.length;
+      document.getElementById('statBilled').textContent = `₹${totBilled}`;
+      document.getElementById('statRecv').textContent = `₹${totRecv}`;
+      document.getElementById('statDue').textContent = `₹${totDue}`;
+
+      if (filtered.length === 0) {
+        elements.tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:24px; color:var(--muted);">Koi record nahi mila.</td></tr>`;
+        return;
+      }
+
+      elements.tableBody.innerHTML = filtered.map(item => {
+        const isDue = (item.due > 0);
+        const tag = isDue ? `<span class="tag-due">Due: ₹${item.due}</span>` : `<span class="tag-paid">Paid</span>`;
+
+        return `
+          <tr>
+            <td style="white-space:nowrap; font-weight:600; font-size:11px;">${item.date}</td>
+            <td>
+              <div style="font-weight:700; color:#fff;">${item.custName}</div>
+              <div style="font-size:10px; color:var(--muted);">${item.custCity || '-'}</div>
+            </td>
+            <td>
+              <div style="color:#93c5fd; font-weight:600;">${item.partner || '---'}</div>
+              <div style="font-size:10px; font-family:'JetBrains Mono',monospace;">${item.tracking || 'No Track'}</div>
+            </td>
+            <td style="white-space:nowrap; font-weight:600;">${item.wt}</td>
+            <td>
+              ${tag}
+              <div style="font-size:10px; color:var(--muted); margin-top:2px;">Bill: ₹${item.billed}</div>
+            </td>
+            <td style="text-align:right; white-space:nowrap;">
+              <button class="btn btn-sm" onclick="actionPrint('${item.id}')" title="Print">🖨️</button>
+              <button class="btn btn-sm" onclick="actionReuse('${item.id}')" title="Reuse">📋</button>
+              <button class="btn btn-sm" onclick="actionEdit('${item.id}')" title="Edit">✏️</button>
+              <button class="btn btn-sm" style="color:#ef4444;" onclick="actionDelete('${item.id}')" title="Delete">🗑️</button>
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          ${list.map(c => `
-            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-              <td style="padding: 8px 6px;"><strong>${c.name}</strong> <span style="font-size:10px; color:var(--text-muted);">${c.city ? '('+c.city+')' : ''}</span></td>
-              <td style="padding: 8px 6px;">${c.count}</td>
-              <td style="padding: 8px 6px;">₹${c.billed}</td>
-              <td style="padding: 8px 6px; color: #34d399;">₹${c.received}</td>
-              <td style="padding: 8px 6px; color: ${c.due > 0 ? '#f87171' : '#34d399'}; font-weight: bold;">₹${c.due}</td>
+        `;
+      }).join('');
+    }
+
+    // BIND EVENT LISTENERS NATIVELY
+    function bindEvents() {
+      // Clear TO Button
+      document.getElementById('btnClearTo').addEventListener('click', () => {
+        elements.toInput.value = '';
+        elements.custName.value = '';
+        elements.custCity.value = '';
+        elements.toInput.focus();
+      });
+
+      // Form Save Buttons
+      document.getElementById('btnSaveAndPrint').addEventListener('click', () => handleSave(true));
+      document.getElementById('btnSaveOnly').addEventListener('click', () => handleSave(false));
+      document.getElementById('btnNewSlip').addEventListener('click', resetForm);
+
+      // Search & Filter Inputs
+      elements.tableSearch.addEventListener('input', renderUI);
+      elements.statusFilter.addEventListener('change', renderUI);
+
+      // Settings Modal
+      document.getElementById('btnOpenSettings').addEventListener('click', () => {
+        document.getElementById('modalSettings').classList.add('open');
+        document.getElementById('passInput').value = '';
+        document.getElementById('passBlock').style.display = 'flex';
+        document.getElementById('tokenBlock').style.display = 'none';
+        document.getElementById('btnUnlockSettings').style.display = 'block';
+        document.getElementById('btnSaveToken').style.display = 'none';
+      });
+
+      document.getElementById('btnCloseSettings').addEventListener('click', () => {
+        document.getElementById('modalSettings').classList.remove('open');
+      });
+
+      document.getElementById('btnUnlockSettings').addEventListener('click', () => {
+        const pass = document.getElementById('passInput').value;
+        if (pass === MASTER_KEY) {
+          document.getElementById('passBlock').style.display = 'none';
+          document.getElementById('tokenBlock').style.display = 'flex';
+          document.getElementById('btnUnlockSettings').style.display = 'none';
+          document.getElementById('btnSaveToken').style.display = 'block';
+          const tok = getDecryptedToken();
+          if (tok) document.getElementById('tokenInput').value = tok;
+        } else {
+          alert('Galat Password! Kripya sahi password enter karein.');
+        }
+      });
+
+      document.getElementById('btnSaveToken').addEventListener('click', () => {
+        const tok = document.getElementById('tokenInput').value.trim();
+        if (!tok) {
+          alert('Token enter karein!');
+          return;
+        }
+        setEncryptedToken(tok);
+        document.getElementById('modalSettings').classList.remove('open');
+        syncFromGitHub();
+      });
+
+      // Backup & Restore Modal
+      document.getElementById('btnOpenBackup').addEventListener('click', () => {
+        document.getElementById('modalBackup').classList.add('open');
+      });
+
+      document.getElementById('btnCloseBackup').addEventListener('click', () => {
+        document.getElementById('modalBackup').classList.remove('open');
+      });
+
+      document.getElementById('btnExportJSON').addEventListener('click', () => {
+        const jsonStr = JSON.stringify(state.entries, null, 2);
+        const blob = new Blob([jsonStr], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `SGM_Courier_Backup_${new Date().toISOString().slice(0,10)}.json`;
+        a.click();
+      });
+
+      document.getElementById('btnImportJSON').addEventListener('click', () => {
+        const file = document.getElementById('importFile').files[0];
+        if (!file) {
+          alert('Kripya ek backup JSON file select karein!');
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const arr = JSON.parse(e.target.result);
+            if (Array.isArray(arr)) {
+              if (confirm(`${arr.length} records restore karne hain?`)) {
+                state.entries = arr;
+                saveLocalData();
+                renderUI();
+                pushToGitHub();
+                alert('Database successfully restore ho gaya!');
+                document.getElementById('modalBackup').classList.remove('open');
+              }
+            } else {
+              alert('Galat file format! JSON list format honi chahiye.');
+            }
+          } catch (err) {
+            alert('JSON read error: ' + err.message);
+          }
+        };
+        reader.readAsText(file);
+      });
+
+      // Ledger Modal
+      document.getElementById('btnOpenLedger').addEventListener('click', () => {
+        renderLedger();
+        document.getElementById('modalLedger').classList.add('open');
+      });
+
+      document.getElementById('btnCloseLedger').addEventListener('click', () => {
+        document.getElementById('modalLedger').classList.remove('open');
+      });
+    }
+
+    function renderLedger() {
+      const map = {};
+      state.entries.forEach(e => {
+        const k = (e.custName || 'Unknown').trim();
+        if (!map[k]) {
+          map[k] = { name: k, city: e.custCity || '', count: 0, billed: 0, recv: 0, due: 0 };
+        }
+        map[k].count++;
+        map[k].billed += (e.billed || 0);
+        map[k].recv += (e.received || 0);
+        map[k].due += (e.due || 0);
+      });
+
+      const list = Object.values(map);
+      const container = document.getElementById('ledgerContent');
+
+      if (list.length === 0) {
+        container.innerHTML = `<div style="padding:16px; color:var(--muted); text-align:center;">Ledger me koi record nahi hai.</div>`;
+        return;
+      }
+
+      container.innerHTML = `
+        <table style="width:100%; border-collapse:collapse; font-size:12px;">
+          <thead>
+            <tr style="background:#111726;">
+              <th style="padding:8px;">Customer</th>
+              <th style="padding:8px;">Parcels</th>
+              <th style="padding:8px;">Billed</th>
+              <th style="padding:8px;">Received</th>
+              <th style="padding:8px;">Balance Due</th>
             </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    `;
-  }
-
-  document.getElementById('ledgerModal').classList.add('active');
-}
-
-function closeLedgerModal() {
-  document.getElementById('ledgerModal').classList.remove('active');
-}
-</script>
+          </thead>
+          <tbody>
+            ${list.map(c => `
+              <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+                <td style="padding:8px;"><strong>${c.name}</strong> <span style="font-size:10px; color:var(--muted);">${c.city ? '('+c.city+')' : ''}</span></td>
+                <td style="padding:8px;">${c.count}</td>
+                <td style="padding:8px;">₹${c.billed}</td>
+                <td style="padding:8px; color:var(--emerald);">₹${c.recv}</td>
+                <td style="padding:8px; color:${c.due > 0 ? '#f87171' : 'var(--emerald)'}; font-weight:bold;">₹${c.due}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+  </script>
 </body>
 </html>
