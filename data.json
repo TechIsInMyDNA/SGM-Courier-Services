@@ -1,21 +1,5 @@
 [
   {
-    "id": "sgm_1791055327883",
-    "date": "04/10/2026",
-    "to": "Test",
-    "from": "Shree Ganesh Medicals\nShop No. 6\nIndira Gandhi Stadium\nGondia (MH) - 441601\nMob:- 9403346235\n9595989017",
-    "wt": "---",
-    "custName": "Test",
-    "custCity": "",
-    "partner": "",
-    "tracking": "",
-    "cost": 0,
-    "billed": 0,
-    "received": 0,
-    "due": 0,
-    "status": "PAID"
-  },
-  {
     "id": "sgm_1791055276870",
     "date": "04/10/2026",
     "to": "Test",
