@@ -333,129 +333,172 @@
       color: #fff;
     }
 
-    /* STRICT A6 PRINT FIT STYLES (105mm x 148mm) */
+    /* =========================================================
+       HIGH-READABILITY SINGLE PAGE A6 PORTRAIT FIT (105mm x 148mm)
+       ========================================================= */
     #print-sheet {
       display: none;
     }
 
     @media print {
-      body * {
-        visibility: hidden !important;
-      }
-      #print-sheet, #print-sheet * {
-        visibility: visible !important;
-      }
-      #print-sheet {
-        display: block !important;
-        position: fixed;
-        left: 0;
-        top: 0;
+      html, body {
         width: 105mm !important;
         height: 148mm !important;
         margin: 0 !important;
-        padding: 5mm !important;
+        padding: 0 !important;
+        background: #fff !important;
+        overflow: hidden !important;
+      }
+
+      body * {
+        visibility: hidden !important;
+      }
+
+      #print-sheet, #print-sheet * {
+        visibility: visible !important;
+      }
+
+      #print-sheet {
+        display: block !important;
+        position: fixed !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 105mm !important;
+        height: 148mm !important;
+        max-width: 105mm !important;
+        max-height: 148mm !important;
+        margin: 0 !important;
+        padding: 4mm !important;
+        box-sizing: border-box !important;
         background: #fff !important;
         color: #000 !important;
-        box-sizing: border-box !important;
+        page-break-after: avoid !important;
+        page-break-before: avoid !important;
+        page-break-inside: avoid !important;
       }
 
       @page {
-        size: A6 portrait;
-        margin: 0;
+        size: 105mm 148mm;
+        margin: 0mm;
       }
 
       .a6-outer {
         width: 100%;
         height: 100%;
-        border: 2px solid #000;
-        border-radius: 2px;
+        border: 2.8px solid #000;
+        border-radius: 4px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        padding: 6px;
+        padding: 6px 7px;
         box-sizing: border-box;
-        font-family: Arial, sans-serif;
+        font-family: Arial, Helvetica, sans-serif;
+        overflow: hidden;
       }
 
       .a6-header {
-        border-bottom: 2px solid #000;
-        padding-bottom: 4px;
+        border-bottom: 2.5px solid #000;
+        padding-bottom: 3px;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        flex-shrink: 0;
       }
 
       .a6-header h2 {
-        font-size: 13pt;
+        font-size: 14pt;
         font-weight: 900;
+        letter-spacing: 0.5px;
         margin: 0;
+        text-transform: uppercase;
       }
 
       .a6-header span {
-        font-size: 9pt;
-        font-weight: bold;
+        font-size: 11pt;
+        font-weight: 800;
       }
 
       .a6-body {
         flex: 1;
         display: flex;
         flex-direction: column;
-        justify-content: space-around;
-        padding: 4px 0;
+        justify-content: space-between;
+        padding: 5px 0;
+        overflow: hidden;
       }
 
-      .a6-section {
-        margin: 3px 0;
+      .a6-section-to {
+        flex: 1.35;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
       }
 
       .a6-label {
-        font-size: 9pt;
+        font-size: 12pt;
         font-weight: 900;
         text-decoration: underline;
-        margin-bottom: 2px;
+        margin-bottom: 3px;
+        display: inline-block;
+        flex-shrink: 0;
       }
 
       .a6-text-to {
-        font-size: 10.5pt;
-        font-weight: 700;
-        line-height: 1.3;
-        white-space: pre-wrap;
-        word-break: break-word;
-      }
-
-      .a6-divider {
-        border-top: 1.5px dashed #000;
-        margin: 4px 0;
-      }
-
-      .a6-text-from {
-        font-size: 8.5pt;
-        font-weight: 600;
+        font-size: 13.5pt;
+        font-weight: 800;
         line-height: 1.25;
         white-space: pre-wrap;
         word-break: break-word;
+        letter-spacing: -0.2px;
+        overflow: hidden;
+      }
+
+      .a6-divider {
+        border-top: 2px dashed #000;
+        margin: 4px 0;
+        flex-shrink: 0;
+      }
+
+      .a6-section-from {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .a6-text-from {
+        font-size: 10.5pt;
+        font-weight: 700;
+        line-height: 1.22;
+        white-space: pre-wrap;
+        word-break: break-word;
+        overflow: hidden;
       }
 
       .a6-footer {
-        border-top: 1.8px solid #000;
+        border-top: 2.5px solid #000;
         padding-top: 4px;
         display: flex;
         justify-content: space-between;
-        align-items: flex-end;
+        align-items: center;
+        flex-shrink: 0;
       }
 
       .a6-wt {
-        border: 1.8px solid #000;
-        padding: 3px 6px;
-        border-radius: 3px;
-        font-size: 9pt;
+        border: 2.2px solid #000;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-size: 12pt;
         font-weight: 900;
+        background: #f0f0f0 !important;
+        -webkit-print-color-adjust: exact;
       }
 
       .a6-meta {
-        font-size: 8pt;
-        font-weight: bold;
+        font-size: 10pt;
+        font-weight: 800;
         text-align: right;
+        line-height: 1.2;
       }
     }
   </style>
@@ -640,12 +683,12 @@ Mob:- 9403346235
         <span id="pDate">Dt: --</span>
       </div>
       <div class="a6-body">
-        <div class="a6-section">
+        <div class="a6-section-to">
           <div class="a6-label">TO:</div>
           <div class="a6-text-to" id="pTo"></div>
         </div>
         <div class="a6-divider"></div>
-        <div class="a6-section">
+        <div class="a6-section-from">
           <div class="a6-label">FROM:</div>
           <div class="a6-text-from" id="pFrom"></div>
         </div>
@@ -664,7 +707,7 @@ Mob:- 9403346235
   <div class="modal-wrap" id="modalSettings">
     <div class="modal-content">
       <h3>⚙️ Cloud Security Settings</h3>
-      <p style="font-size:11px; color:var(--muted);">Master password daal kar token configure karein. Repo: <code>TechIsInMyDNA/SGM-Courier-Services</code></p>
+      <p style="font-size:11px; color:var(--muted);">Master password daal kar token configure karein. Repo: <code>TechIsInMyDNA/SGM-Courier-Services</code>[span_0](start_span)[span_0](end_span)</p>
       
       <div class="field" id="passBlock">
         <label>Master Password:</label>
