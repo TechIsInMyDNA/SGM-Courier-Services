@@ -326,7 +326,7 @@
     }
 
     /* =========================================================
-       DYNAMIC FIT SINGLE PAGE A6 PORTRAIT (105mm x 148mm)
+       STRICT SINGLE PAGE (1 of 1) A6 PORTRAIT FIT
        ========================================================= */
     #print-sheet {
       display: none;
@@ -338,9 +338,9 @@
       }
 
       html, body {
-        width: 105mm !important;
-        height: 148mm !important;
-        max-width: 105mm !important;
+        width: 100% !important;
+        height: 100% !important;
+        min-height: 0 !important;
         max-height: 148mm !important;
         margin: 0 !important;
         padding: 0 !important;
@@ -351,41 +351,42 @@
       #print-sheet {
         display: flex !important;
         flex-direction: column !important;
-        width: 105mm !important;
-        height: 148mm !important;
+        width: 100% !important;
         max-width: 105mm !important;
-        max-height: 148mm !important;
-        margin: 0 !important;
-        padding: 3.5mm !important;
+        height: 142mm !important; /* Buffer prevents Android 0.5px page spill */
+        max-height: 143mm !important;
+        margin: 0 auto !important;
+        padding: 3mm 4mm !important;
         box-sizing: border-box !important;
         background: #fff !important;
         color: #000 !important;
         page-break-after: avoid !important;
         page-break-before: avoid !important;
         page-break-inside: avoid !important;
+        overflow: hidden !important;
       }
 
       @page {
-        size: 105mm 148mm;
-        margin: 0;
+        size: A6 portrait;
+        margin: 0mm;
       }
 
       .a6-outer {
         width: 100%;
         height: 100%;
-        border: 2.8px solid #000;
+        border: 2.5px solid #000;
         border-radius: 4px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        padding: 5px 6px;
+        padding: 5px 8px;
         box-sizing: border-box;
         font-family: Arial, Helvetica, sans-serif;
         overflow: hidden;
       }
 
       .a6-header {
-        border-bottom: 2.5px solid #000;
+        border-bottom: 2.2px solid #000;
         padding-bottom: 3px;
         display: flex;
         justify-content: space-between;
@@ -394,7 +395,7 @@
       }
 
       .a6-header h2 {
-        font-size: 13.5pt;
+        font-size: 13pt;
         font-weight: 900;
         letter-spacing: 0.5px;
         margin: 0;
@@ -402,7 +403,7 @@
       }
 
       .a6-header span {
-        font-size: 10pt;
+        font-size: 9pt;
         font-weight: 800;
       }
 
@@ -410,13 +411,14 @@
         flex: 1;
         display: flex;
         flex-direction: column;
-        padding: 2px 0;
+        padding: 3px 0;
         overflow: hidden;
         min-height: 0;
+        justify-content: space-between;
       }
 
       .a6-section-to {
-        flex: 1.45;
+        flex: 1.4;
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -428,7 +430,8 @@
         font-weight: 900;
         text-decoration: underline;
         margin-bottom: 2px;
-        display: inline-block;
+        display: block;
+        text-align: left !important;
         flex-shrink: 0;
       }
 
@@ -436,21 +439,23 @@
         font-weight: 800;
         white-space: pre-wrap;
         word-break: break-word;
-        letter-spacing: -0.2px;
+        letter-spacing: -0.1px;
         overflow: hidden;
         flex: 1;
         display: flex;
-        align-items: flex-start;
+        flex-direction: column;
+        justify-content: space-evenly;
+        text-align: center !important;
       }
 
       .a6-divider {
-        border-top: 2px dashed #000;
+        border-top: 1.8px dashed #000;
         margin: 3px 0;
         flex-shrink: 0;
       }
 
       .a6-section-from {
-        flex: 1;
+        flex: 1.1;
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -464,11 +469,13 @@
         overflow: hidden;
         flex: 1;
         display: flex;
-        align-items: flex-start;
+        flex-direction: column;
+        justify-content: space-evenly;
+        text-align: center !important;
       }
 
       .a6-footer {
-        border-top: 2.5px solid #000;
+        border-top: 2.2px solid #000;
         padding-top: 3px;
         display: flex;
         justify-content: space-between;
@@ -477,17 +484,17 @@
       }
 
       .a6-wt {
-        border: 2.2px solid #000;
+        border: 2px solid #000;
         padding: 2px 7px;
         border-radius: 4px;
-        font-size: 11.5pt;
+        font-size: 11pt;
         font-weight: 900;
         background: #f0f0f0 !important;
         -webkit-print-color-adjust: exact;
       }
 
       .a6-meta {
-        font-size: 9.5pt;
+        font-size: 8.8pt;
         font-weight: 800;
         text-align: right;
         line-height: 1.2;
@@ -702,7 +709,7 @@ Mob:- 9403346235
   <div class="modal-wrap" id="modalSettings">
     <div class="modal-content">
       <h3>⚙️ Cloud Security Settings</h3>
-      <p style="font-size:11px; color:var(--muted);">Master password daal kar token configure karein. Repo: <code>TechIsInMyDNA/SGM-Courier-Services</code>[span_1](start_span)[span_1](end_span)</p>
+      <p style="font-size:11px; color:var(--muted);">Master password daal kar token configure karein. Repo: <code>TechIsInMyDNA/SGM-Courier-Services</code>[span_3](start_span)[span_3](end_span)</p>
       
       <div class="field" id="passBlock">
         <label>Master Password:</label>
@@ -1076,33 +1083,32 @@ Mob:- 9403346235
       }
     }
 
-    // ACCURATE CONTAINER-FILL AUTO-FONT ALGORITHM (ZERO UNNECESSARY WHITE SPACE)
+    // AUTO-FONT ALGORITHM (CENTER ALIGNED & ZERO BOTTOM WHITE SPACE)
     function fitTextToBox(element, parentSection, minPt, maxPt) {
       if (!element || !parentSection) return;
 
-      const targetHeight = parentSection.clientHeight - 22; // label and margin adjustment
+      const targetHeight = parentSection.clientHeight - 20;
       const targetWidth = parentSection.clientWidth;
 
       let low = minPt;
       let high = maxPt;
       let optimal = minPt;
 
-      // Iterative binary-fitting to find the maximum legible font that completely fills the space without overflowing
-      for (let i = 0; i < 18; i++) {
+      for (let i = 0; i < 20; i++) {
         let mid = (low + high) / 2;
         element.style.fontSize = mid + 'pt';
-        element.style.lineHeight = (mid * 1.25) + 'pt';
+        element.style.lineHeight = (mid * 1.3) + 'pt';
 
         if (element.scrollHeight <= targetHeight && element.scrollWidth <= targetWidth) {
           optimal = mid;
-          low = mid + 0.2; // Try larger font to eliminate white space
+          low = mid + 0.2;
         } else {
-          high = mid - 0.2; // Too big, step down
+          high = mid - 0.2;
         }
       }
 
       element.style.fontSize = optimal.toFixed(1) + 'pt';
-      element.style.lineHeight = (optimal * 1.24).toFixed(1) + 'pt';
+      element.style.lineHeight = (optimal * 1.3).toFixed(1) + 'pt';
     }
 
     function runPrint(rec) {
@@ -1115,7 +1121,6 @@ Mob:- 9403346235
 
       const printSheet = document.getElementById('print-sheet');
       
-      // Temporarily render container invisibly to read exact hardware dimensions
       printSheet.style.display = 'flex';
       printSheet.style.visibility = 'hidden';
       printSheet.style.position = 'fixed';
@@ -1125,11 +1130,9 @@ Mob:- 9403346235
       const secTo = document.querySelector('.a6-section-to');
       const secFrom = document.querySelector('.a6-section-from');
 
-      // Calculate perfect fill: minimum 8pt for heavy text, up to 21pt for short text
-      fitTextToBox(toElem, secTo, 8.5, 21.0);
-      fitTextToBox(fromElem, secFrom, 8.0, 16.0);
+      fitTextToBox(toElem, secTo, 8.0, 20.0);
+      fitTextToBox(fromElem, secFrom, 7.5, 16.0);
 
-      // Revert inline styles to allow @media print CSS to take charge
       printSheet.style.display = '';
       printSheet.style.visibility = '';
       printSheet.style.position = '';
