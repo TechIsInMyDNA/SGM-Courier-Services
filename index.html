@@ -425,7 +425,6 @@
         min-height: 0;
       }
 
-      /* TO label on the Right */
       .a6-label-to {
         font-size: 11pt;
         font-weight: 900;
@@ -436,7 +435,6 @@
         flex-shrink: 0;
       }
 
-      /* TO Matter strictly left-aligned with even spacing */
       .a6-text-to {
         font-weight: 800;
         white-space: pre-wrap;
@@ -466,7 +464,6 @@
         min-height: 0;
       }
 
-      /* FROM label on the Right */
       .a6-label-from {
         font-size: 11pt;
         font-weight: 900;
@@ -477,7 +474,6 @@
         flex-shrink: 0;
       }
 
-      /* FROM Matter strictly left-aligned with even spacing */
       .a6-text-from {
         font-weight: 700;
         white-space: pre-wrap;
@@ -638,9 +634,10 @@ Mob:- 9403346235
         </div>
       </div>
 
-      <div class="form-actions">
+      <div class="form-actions" style="grid-template-columns: 1fr 1fr; gap: 8px;">
         <button type="button" class="btn btn-primary" id="btnSaveAndPrint">💾 Save & Print A6</button>
-        <button type="button" class="btn" id="btnSaveOnly">💾 Save Entry</button>
+        <button type="button" class="btn btn-emerald" id="btnSaveAndWA">📲 Save & WhatsApp</button>
+        <button type="button" class="btn" id="btnSaveOnly" style="grid-column: span 2;">💾 Only Save Entry</button>
       </div>
     </div>
 
@@ -727,7 +724,7 @@ Mob:- 9403346235
   <div class="modal-wrap" id="modalSettings">
     <div class="modal-content">
       <h3>⚙️ Cloud Security Settings</h3>
-      <p style="font-size:11px; color:var(--muted);">Master password daal kar token configure karein. Repo: <code>TechIsInMyDNA/SGM-Courier-Services</code></p>
+      <p style="font-size:11px; color:var(--muted);">Master password daal kar token configure karein. Repo: <code>TechIsInMyDNA/SGM-Courier-Services</code>[cite: 1]</p>
       
       <div class="field" id="passBlock">
         <label>Master Password:</label>
@@ -773,7 +770,7 @@ Mob:- 9403346235
 
   <!-- LEDGER MODAL -->
   <div class="modal-wrap" id="modalLedger">
-    <div class="modal-content" style="max-width:600px;">
+    <div class="modal-content" style="max-width:650px;">
       <h3>📊 Customer Running Ledger</h3>
       <div style="max-height:360px; overflow-y:auto; border:1px solid var(--border); border-radius:6px;" id="ledgerContent"></div>
       <div style="display:flex; justify-content:flex-end;">
@@ -1035,7 +1032,76 @@ Mob:- 9403346235
       initDate();
     }
 
-    function handleSave(triggerPrint) {
+    function extractPhoneFromText(text) {
+      if (!text) return '';
+      const matches = text.match(/(?:\+?91[\-\s]?)?([6-9]\d{9})/g);
+      if (matches && matches.length > 0) {
+        return matches[0].replace(/\D/g, '').slice(-10);
+      }
+      return '';
+    }
+
+    function shareRecordOnWhatsApp(rec) {
+      let phone = extractPhoneFromText(rec.to);
+      if (!phone) {
+        phone = prompt("Customer ka WhatsApp Mobile Number dalein (10 digits):", "");
+        if (!phone) return;
+        phone = phone.replace(/\D/g, '').slice(-10);
+      }
+
+      const msg = `*📦 SGM COURIER SERVICES 📦*\n` +
+        `----------------------------------------\n` +
+        `📅 *Date:* ${rec.date || 'N/A'}\n` +
+        `👤 *Customer:* ${rec.custName || 'Valued Customer'}\n` +
+        `📍 *Destination:* ${rec.custCity || 'N/A'}\n` +
+        `🚚 *Courier Partner:* ${rec.partner || 'N/A'}\n` +
+        `🔢 *Tracking / AWB No:* ${rec.tracking || 'Pending / N/A'}\n` +
+        `⚖️ *Weight:* ${rec.wt || '---'}\n` +
+        `----------------------------------------\n` +
+        `💵 *Bill Amount:* ₹${rec.billed || 0}\n` +
+        `✅ *Amount Received:* ₹${rec.received || 0}\n` +
+        `📌 *Payment Status:* *${rec.status || 'PAID'}*\n` +
+        `⚠️ *Balance Due:* ₹${rec.due || 0}\n` +
+        `----------------------------------------\n` +
+        `*Shree Ganesh Medicals | Gondia*\n` +
+        `_Thank you for choosing SGM Courier Services!_`;
+
+      const waUrl = `https://wa.me/91${phone}?text=${encodeURIComponent(msg)}`;
+      window.open(waUrl, '_blank');
+    }
+
+    function sendLedgerWhatsApp(encodedData) {
+      try {
+        const c = JSON.parse(decodeURIComponent(encodedData));
+        const userRec = state.entries.find(e => (e.custName || '').trim().toLowerCase() === c.name.toLowerCase());
+        let phone = userRec ? extractPhoneFromText(userRec.to) : '';
+
+        if (!phone) {
+          phone = prompt(`${c.name} ka WhatsApp Mobile Number dalein (10 digits):`, "");
+          if (!phone) return;
+          phone = phone.replace(/\D/g, '').slice(-10);
+        }
+
+        const msg = `*📊 SGM COURIER SERVICES - ACCOUNT LEDGER* \n` +
+          `----------------------------------------\n` +
+          `👤 *Customer:* ${c.name}\n` +
+          `📍 *City:* ${c.city || 'N/A'}\n` +
+          `📦 *Total Parcels Shipped:* ${c.count}\n` +
+          `💵 *Total Bill Amount:* ₹${c.billed}\n` +
+          `✅ *Total Payment Received:* ₹${c.recv}\n` +
+          `⚠️ *Net Pending Balance:* *₹${c.due}*\n` +
+          `----------------------------------------\n` +
+          `*Shree Ganesh Medicals | Gondia*\n` +
+          `_Kripya baaki payment hisaab clear karein. Thank you!_`;
+
+        const waUrl = `https://wa.me/91${phone}?text=${encodeURIComponent(msg)}`;
+        window.open(waUrl, '_blank');
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function handleSave(actionType) {
       const toVal = elements.toInput.value.trim();
       const fromVal = elements.fromInput.value.trim();
       const rawDate = elements.slipDate.value;
@@ -1094,8 +1160,11 @@ Mob:- 9403346235
       renderUI();
       pushToGitHub();
 
-      if (triggerPrint) {
+      if (actionType === 'print') {
         runPrint(record);
+      } else if (actionType === 'wa') {
+        shareRecordOnWhatsApp(record);
+        resetForm();
       } else {
         resetForm();
       }
@@ -1161,6 +1230,11 @@ Mob:- 9403346235
     window.actionPrint = function(id) {
       const rec = state.entries.find(x => x.id === id);
       if (rec) runPrint(rec);
+    };
+
+    window.actionWhatsApp = function(id) {
+      const rec = state.entries.find(x => x.id === id);
+      if (rec) shareRecordOnWhatsApp(rec);
     };
 
     window.actionReuse = function(id) {
@@ -1278,6 +1352,7 @@ Mob:- 9403346235
             </td>
             <td style="text-align:right; white-space:nowrap;">
               <button class="btn btn-sm" onclick="actionPrint('${item.id}')" title="Print">🖨️</button>
+              <button class="btn btn-sm btn-emerald" onclick="actionWhatsApp('${item.id}')" title="WhatsApp Share">📲</button>
               <button class="btn btn-sm" onclick="actionReuse('${item.id}')" title="Reuse">📋</button>
               <button class="btn btn-sm" onclick="actionEdit('${item.id}')" title="Edit">✏️</button>
               <button class="btn btn-sm" style="color:#ef4444;" onclick="actionDelete('${item.id}')" title="Delete">🗑️</button>
@@ -1295,8 +1370,9 @@ Mob:- 9403346235
         elements.toInput.focus();
       });
 
-      document.getElementById('btnSaveAndPrint').addEventListener('click', () => handleSave(true));
-      document.getElementById('btnSaveOnly').addEventListener('click', () => handleSave(false));
+      document.getElementById('btnSaveAndPrint').addEventListener('click', () => handleSave('print'));
+      document.getElementById('btnSaveAndWA').addEventListener('click', () => handleSave('wa'));
+      document.getElementById('btnSaveOnly').addEventListener('click', () => handleSave('none'));
       document.getElementById('btnNewSlip').addEventListener('click', resetForm);
 
       elements.tableSearch.addEventListener('input', renderUI);
@@ -1445,6 +1521,7 @@ Mob:- 9403346235
               <th style="padding:8px;">Billed</th>
               <th style="padding:8px;">Received</th>
               <th style="padding:8px;">Balance Due</th>
+              <th style="padding:8px; text-align:right;">WhatsApp</th>
             </tr>
           </thead>
           <tbody>
@@ -1455,6 +1532,9 @@ Mob:- 9403346235
                 <td style="padding:8px;">₹${c.billed}</td>
                 <td style="padding:8px; color:var(--emerald);">₹${c.recv}</td>
                 <td style="padding:8px; color:${c.due > 0 ? '#f87171' : 'var(--emerald)'}; font-weight:bold;">₹${c.due}</td>
+                <td style="padding:8px; text-align:right;">
+                  <button class="btn btn-sm btn-emerald" onclick="sendLedgerWhatsApp('${encodeURIComponent(JSON.stringify(c))}')" title="Send Ledger Hisaab on WhatsApp">📲 WhatsApp</button>
+                </td>
               </tr>
             `).join('')}
           </tbody>
