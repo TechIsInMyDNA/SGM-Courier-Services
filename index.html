@@ -425,6 +425,7 @@
         min-height: 0;
       }
 
+      /* TO label on the Right */
       .a6-label-to {
         font-size: 11pt;
         font-weight: 900;
@@ -435,6 +436,7 @@
         flex-shrink: 0;
       }
 
+      /* TO Matter strictly left-aligned with even spacing */
       .a6-text-to {
         font-weight: 800;
         white-space: pre-wrap;
@@ -464,6 +466,7 @@
         min-height: 0;
       }
 
+      /* FROM label on the Right */
       .a6-label-from {
         font-size: 11pt;
         font-weight: 900;
@@ -474,6 +477,7 @@
         flex-shrink: 0;
       }
 
+      /* FROM Matter strictly left-aligned with even spacing */
       .a6-text-from {
         font-weight: 700;
         white-space: pre-wrap;
@@ -593,9 +597,14 @@ Mob:- 9403346235
           <input type="text" id="custName" placeholder="Ledger name">
         </div>
         <div class="field">
-          <label>City / Place:</label>
-          <input type="text" id="custCity" placeholder="Destination">
+          <label>Customer Mobile No (WhatsApp):</label>
+          <input type="tel" id="custMobile" placeholder="10-digit Mobile No">
         </div>
+      </div>
+
+      <div class="field">
+        <label>City / Place:</label>
+        <input type="text" id="custCity" placeholder="Destination">
       </div>
 
       <div class="grid-2">
@@ -799,6 +808,7 @@ Mob:- 9403346235
       wtVal: document.getElementById('wtVal'),
       wtUnit: document.getElementById('wtUnit'),
       custName: document.getElementById('custName'),
+      custMobile: document.getElementById('custMobile'),
       custCity: document.getElementById('custCity'),
       courierPartner: document.getElementById('courierPartner'),
       trackingId: document.getElementById('trackingId'),
@@ -1021,6 +1031,7 @@ Mob:- 9403346235
       elements.activeEditingBadge.style.display = 'none';
       elements.toInput.value = '';
       elements.custName.value = '';
+      elements.custMobile.value = '';
       elements.custCity.value = '';
       elements.courierPartner.value = '';
       elements.trackingId.value = '';
@@ -1042,7 +1053,10 @@ Mob:- 9403346235
     }
 
     function shareRecordOnWhatsApp(rec) {
-      let phone = extractPhoneFromText(rec.to);
+      let phone = (rec.custMobile || '').replace(/\D/g, '').slice(-10);
+      if (!phone) {
+        phone = extractPhoneFromText(rec.to);
+      }
       if (!phone) {
         phone = prompt("Customer ka WhatsApp Mobile Number dalein (10 digits):", "");
         if (!phone) return;
@@ -1073,16 +1087,22 @@ Mob:- 9403346235
     function sendLedgerWhatsApp(encodedData) {
       try {
         const c = JSON.parse(decodeURIComponent(encodedData));
-        const userRec = state.entries.find(e => (e.custName || '').trim().toLowerCase() === c.name.toLowerCase());
-        let phone = userRec ? extractPhoneFromText(userRec.to) : '';
-
+        let phone = (c.phone || '').replace(/\D/g, '').slice(-10);
+        if (!phone) {
+          const userRec = state.entries.find(e => (e.custName || '').trim().toLowerCase() === c.name.toLowerCase() && e.custMobile);
+          if (userRec) phone = (userRec.custMobile || '').replace(/\D/g, '').slice(-10);
+        }
+        if (!phone) {
+          const userRec = state.entries.find(e => (e.custName || '').trim().toLowerCase() === c.name.toLowerCase());
+          if (userRec) phone = extractPhoneFromText(userRec.to);
+        }
         if (!phone) {
           phone = prompt(`${c.name} ka WhatsApp Mobile Number dalein (10 digits):`, "");
           if (!phone) return;
           phone = phone.replace(/\D/g, '').slice(-10);
         }
 
-        const msg = `*📊 SGM COURIER SERVICES - ACCOUNT LEDGER* \n` +
+        const msg = `*📊 SGM COURIER SERVICES - ACCOUNT LEDGER*\n` +
           `----------------------------------------\n` +
           `👤 *Customer:* ${c.name}\n` +
           `📍 *City:* ${c.city || 'N/A'}\n` +
@@ -1119,6 +1139,7 @@ Mob:- 9403346235
       }
 
       let cName = elements.custName.value.trim();
+      let cMobile = elements.custMobile.value.trim().replace(/\D/g, '').slice(-10);
       let cCity = elements.custCity.value.trim();
 
       if (!cName) {
@@ -1139,6 +1160,7 @@ Mob:- 9403346235
         from: fromVal,
         wt: wtNum ? `${wtNum} ${wtUnit}` : '---',
         custName: cName,
+        custMobile: cMobile,
         custCity: cCity,
         partner: elements.courierPartner.value.trim(),
         tracking: elements.trackingId.value.trim(),
@@ -1243,6 +1265,7 @@ Mob:- 9403346235
       resetForm();
       elements.toInput.value = rec.to || '';
       elements.custName.value = rec.custName || '';
+      elements.custMobile.value = rec.custMobile || '';
       elements.custCity.value = rec.custCity || '';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
@@ -1278,6 +1301,7 @@ Mob:- 9403346235
       }
 
       elements.custName.value = rec.custName || '';
+      elements.custMobile.value = rec.custMobile || '';
       elements.custCity.value = rec.custCity || '';
       elements.courierPartner.value = rec.partner || '';
       elements.trackingId.value = rec.tracking || '';
@@ -1310,7 +1334,7 @@ Mob:- 9403346235
         totRecv += (item.received || 0);
         totDue += (item.due || 0);
 
-        const matchText = `${item.custName} ${item.custCity} ${item.tracking} ${item.to} ${item.partner}`.toLowerCase();
+        const matchText = `${item.custName} ${item.custMobile || ''} ${item.custCity} ${item.tracking} ${item.to} ${item.partner}`.toLowerCase();
         const matchesQ = matchText.includes(q);
 
         const matchesStatus = (filter === 'ALL') ? true :
@@ -1339,7 +1363,7 @@ Mob:- 9403346235
             <td style="white-space:nowrap; font-weight:600; font-size:11px;">${item.date}</td>
             <td>
               <div style="font-weight:700; color:#fff;">${item.custName}</div>
-              <div style="font-size:10px; color:var(--muted);">${item.custCity || '-'}</div>
+              <div style="font-size:10px; color:var(--muted);">${item.custMobile ? '📱 ' + item.custMobile + ' | ' : ''}${item.custCity || '-'}</div>
             </td>
             <td>
               <div style="color:#93c5fd; font-weight:600;">${item.partner || '---'}</div>
@@ -1366,6 +1390,7 @@ Mob:- 9403346235
       document.getElementById('btnClearTo').addEventListener('click', () => {
         elements.toInput.value = '';
         elements.custName.value = '';
+        elements.custMobile.value = '';
         elements.custCity.value = '';
         elements.toInput.focus();
       });
@@ -1496,8 +1521,9 @@ Mob:- 9403346235
       state.entries.forEach(e => {
         const k = (e.custName || 'Unknown').trim();
         if (!map[k]) {
-          map[k] = { name: k, city: e.custCity || '', count: 0, billed: 0, recv: 0, due: 0 };
+          map[k] = { name: k, city: e.custCity || '', phone: e.custMobile || '', count: 0, billed: 0, recv: 0, due: 0 };
         }
+        if (!map[k].phone && e.custMobile) map[k].phone = e.custMobile;
         map[k].count++;
         map[k].billed += (e.billed || 0);
         map[k].recv += (e.received || 0);
