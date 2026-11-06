@@ -503,7 +503,7 @@
       <span>📦</span> SGM Courier Hub
       <div class="status-badge">
         <span class="dot" id="syncDot"></span>
-        <span id="syncText">Live Cloud</span>
+        <span id="syncText">Data Branch Sync</span>
       </div>
     </div>
     <div class="nav-btns">
@@ -708,7 +708,7 @@ Mob:- 9403346235
   <div class="modal-wrap" id="modalSettings">
     <div class="modal-content">
       <h3>⚙️ Cloud Security Settings</h3>
-      <p style="font-size:11px; color:var(--muted);">Master password daal kar token configure karein. Repo: <code>TechIsInMyDNA/SGM-Courier-Services</code>[span_0](start_span)[span_0](end_span)</p>
+      <p style="font-size:11px; color:var(--muted);">Master password daal kar token configure karein. Repo: <code>TechIsInMyDNA/SGM-Courier-Services</code>[cite: 1]</p>
       
       <div class="field" id="passBlock">
         <label>Master Password:</label>
@@ -754,7 +754,7 @@ Mob:- 9403346235
 
   <!-- LEDGER MODAL -->
   <div class="modal-wrap" id="modalLedger">
-    <div class="modal-content" style="max-width:600px;">
+    <div class="modal-content" style="max-width:650px;">
       <h3>📊 Customer Running Ledger</h3>
       <div style="max-height:360px; overflow-y:auto; border:1px solid var(--border); border-radius:6px;" id="ledgerContent"></div>
       <div style="display:flex; justify-content:flex-end;">
@@ -875,7 +875,7 @@ Mob:- 9403346235
       localStorage.setItem('sgm_courier_tok', enc);
     }
 
-    // CLOUD SYNC
+    // CLOUD SYNC WITH ISOLATED DATA BRANCH (NO PAGES DEPLOYMENT TRIGGER)
     function updateSyncBadge(status, label) {
       elements.syncDot.className = 'dot';
       if (status === 'syncing') elements.syncDot.classList.add('syncing');
@@ -899,7 +899,6 @@ Mob:- 9403346235
         }
 
         if (checkRes.status === 404) {
-          // Branch nahi hai, default branch (main) se auto-create karenge
           const repoRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`, {
             headers: {
               'Authorization': `token ${token}`,
@@ -1047,10 +1046,8 @@ Mob:- 9403346235
 
     function extractPhoneFromText(text) {
       if (!text) return '';
-      // Match 10 digit Indian numbers with optional +91 or 0 prefix
       const matches = text.match(/(?:\+?91[\-\s]?)?([6-9]\d{9})/g);
       if (matches && matches.length > 0) {
-        // Return pure 10 digits of first match
         return matches[0].replace(/\D/g, '').slice(-10);
       }
       return '';
@@ -1091,10 +1088,15 @@ Mob:- 9403346235
     function sendLedgerWhatsApp(encodedData) {
       try {
         const c = JSON.parse(decodeURIComponent(encodedData));
-        // Find latest phone from customer records if possible
-        const userRec = state.entries.find(e => (e.custName || '').trim().toLowerCase() === c.name.toLowerCase());
-        let phone = userRec ? extractPhoneFromText(userRec.to) : '';
-
+        let phone = (c.phone || '').replace(/\D/g, '').slice(-10);
+        if (!phone) {
+          const userRec = state.entries.find(e => (e.custName || '').trim().toLowerCase() === c.name.toLowerCase() && e.custMobile);
+          if (userRec) phone = (userRec.custMobile || '').replace(/\D/g, '').slice(-10);
+        }
+        if (!phone) {
+          const userRec = state.entries.find(e => (e.custName || '').trim().toLowerCase() === c.name.toLowerCase());
+          if (userRec) phone = extractPhoneFromText(userRec.to);
+        }
         if (!phone) {
           phone = prompt(`${c.name} ka WhatsApp Mobile Number dalein (10 digits):`, "");
           if (!phone) return;
