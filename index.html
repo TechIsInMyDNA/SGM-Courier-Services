@@ -503,7 +503,7 @@
       <span>📦</span> SGM Courier Hub
       <div class="status-badge">
         <span class="dot" id="syncDot"></span>
-        <span id="syncText">Data Branch Sync</span>
+        <span id="syncText">Live Cloud</span>
       </div>
     </div>
     <div class="nav-btns">
@@ -768,18 +768,15 @@ Mob:- 9403346235
     const REPO_OWNER = 'TechIsInMyDNA';
     const REPO_NAME = 'SGM-Courier-Services';
     const FILE_PATH = 'data.json';
-    const DATA_BRANCH = 'data';
+    const MAIN_BRANCH = 'main';
     const MASTER_KEY = 'Courier@144';
 
-    // APP STATE
     let state = {
       entries: [],
       editingId: null,
-      sha: null,
-      branchReady: false
+      sha: null
     };
 
-    // DOM ELEMENTS
     const elements = {
       toInput: document.getElementById('toInput'),
       fromInput: document.getElementById('fromInput'),
@@ -805,10 +802,9 @@ Mob:- 9403346235
       activeEditingBadge: document.getElementById('activeEditingBadge')
     };
 
-    // ON DOM LOAD
     window.addEventListener('DOMContentLoaded', () => {
       initDate();
-      loadLocalData();
+      loadLocalData(); // Sabse pehle local storage load hoga taaki data instant dikhe
       renderUI();
       bindEvents();
       initSync();
@@ -845,18 +841,35 @@ Mob:- 9403346235
       elements.slipTime.value = `${hh}:${min}`;
     }
 
-    // LOCAL STORAGE & AES ENCRYPTION
+    // LOCAL STORAGE & AES ENCRYPTION / FALLBACK
     function loadLocalData() {
       try {
         const raw = localStorage.getItem('sgm_courier_db');
-        if (raw) state.entries = JSON.parse(raw);
+        if (raw) {
+          if (raw.startsWith('[') || raw.startsWith('{')) {
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed)) state.entries = parsed;
+          } else {
+            const bytes = CryptoJS.AES.decrypt(raw, MASTER_KEY);
+            const decryptedStr = bytes.toString(CryptoJS.enc.Utf8);
+            if (decryptedStr) {
+              const parsed = JSON.parse(decryptedStr);
+              if (Array.isArray(parsed)) state.entries = parsed;
+            }
+          }
+        }
       } catch (e) {
-        state.entries = [];
+        console.error('Local load err:', e);
       }
     }
 
     function saveLocalData() {
-      localStorage.setItem('sgm_courier_db', JSON.stringify(state.entries));
+      try {
+        const enc = CryptoJS.AES.encrypt(JSON.stringify(state.entries), MASTER_KEY).toString();
+        localStorage.setItem('sgm_courier_db', enc);
+      } catch (e) {
+        localStorage.setItem('sgm_courier_db', JSON.stringify(state.entries));
+      }
     }
 
     function getDecryptedToken() {
@@ -875,70 +888,12 @@ Mob:- 9403346235
       localStorage.setItem('sgm_courier_tok', enc);
     }
 
-    // CLOUD SYNC WITH ISOLATED DATA BRANCH (NO PAGES DEPLOYMENT TRIGGER)
+    // CLOUD SYNC WITH MAIN BRANCH
     function updateSyncBadge(status, label) {
       elements.syncDot.className = 'dot';
       if (status === 'syncing') elements.syncDot.classList.add('syncing');
       if (status === 'error') elements.syncDot.classList.add('error');
       elements.syncText.textContent = label;
-    }
-
-    async function ensureDataBranch(token) {
-      if (state.branchReady) return true;
-      try {
-        const checkRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/branches/${DATA_BRANCH}`, {
-          headers: {
-            'Authorization': `token ${token}`,
-            'Accept': 'application/vnd.github.v3+json'
-          }
-        });
-
-        if (checkRes.status === 200) {
-          state.branchReady = true;
-          return true;
-        }
-
-        if (checkRes.status === 404) {
-          const repoRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`, {
-            headers: {
-              'Authorization': `token ${token}`,
-              'Accept': 'application/vnd.github.v3+json'
-            }
-          });
-          const repoData = await repoRes.json();
-          const defBranch = repoData.default_branch || 'main';
-
-          const refRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/git/ref/heads/${defBranch}`, {
-            headers: {
-              'Authorization': `token ${token}`,
-              'Accept': 'application/vnd.github.v3+json'
-            }
-          });
-          const refData = await refRes.json();
-          const commitSha = refData.object.sha;
-
-          const createBranchRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/git/refs`, {
-            method: 'POST',
-            headers: {
-              'Authorization': `token ${token}`,
-              'Accept': 'application/vnd.github.v3+json',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              ref: `refs/heads/${DATA_BRANCH}`,
-              sha: commitSha
-            })
-          });
-
-          if (createBranchRes.ok || createBranchRes.status === 201) {
-            state.branchReady = true;
-            return true;
-          }
-        }
-      } catch (e) {
-        console.error('Branch init error:', e);
-      }
-      return false;
     }
 
     async function syncFromGitHub() {
@@ -950,9 +905,7 @@ Mob:- 9403346235
 
       try {
         updateSyncBadge('syncing', 'Syncing...');
-        await ensureDataBranch(token);
-
-        const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}?ref=${DATA_BRANCH}&_=${Date.now()}`;
+        const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}?ref=${MAIN_BRANCH}&_=${Date.now()}`;
         const res = await fetch(url, {
           headers: {
             'Authorization': `token ${token}`,
@@ -963,8 +916,27 @@ Mob:- 9403346235
         if (res.status === 200) {
           const data = await res.json();
           state.sha = data.sha;
-          const parsed = JSON.parse(decodeURIComponent(escape(atob(data.content))));
-          if (Array.isArray(parsed)) {
+          const rawDecoded = decodeURIComponent(escape(atob(data.content)));
+          
+          let parsed = null;
+          try {
+            const jsonCheck = JSON.parse(rawDecoded);
+            if (jsonCheck && jsonCheck.encryptedPayload) {
+              const decrypted = CryptoJS.AES.decrypt(jsonCheck.encryptedPayload, MASTER_KEY).toString(CryptoJS.enc.Utf8);
+              parsed = JSON.parse(decrypted);
+            } else if (Array.isArray(jsonCheck)) {
+              parsed = jsonCheck;
+            }
+          } catch (ex) {
+            try {
+              const decrypted = CryptoJS.AES.decrypt(rawDecoded, MASTER_KEY).toString(CryptoJS.enc.Utf8);
+              parsed = JSON.parse(decrypted);
+            } catch (err) {
+              parsed = null;
+            }
+          }
+
+          if (Array.isArray(parsed) && parsed.length > 0) {
             state.entries = parsed;
             saveLocalData();
             renderUI();
@@ -986,15 +958,13 @@ Mob:- 9403346235
 
       try {
         updateSyncBadge('syncing', 'Pushing Live...');
-        await ensureDataBranch(token);
-
         const jsonText = JSON.stringify(state.entries, null, 2);
         const b64 = btoa(unescape(encodeURIComponent(jsonText)));
 
         const payload = {
           message: `Live Sync ${new Date().toISOString()}`,
           content: b64,
-          branch: DATA_BRANCH
+          branch: MAIN_BRANCH
         };
         if (state.sha) payload.sha = state.sha;
 
@@ -1022,7 +992,7 @@ Mob:- 9403346235
 
     function initSync() {
       syncFromGitHub();
-      setInterval(syncFromGitHub, 12000);
+      setInterval(syncFromGitHub, 15000);
     }
 
     // FORM RESET & DATA BINDING
@@ -1203,7 +1173,6 @@ Mob:- 9403346235
       window.print();
     }
 
-    // ACTIONS: EDIT / DELETE / REUSE / PRINT
     window.actionPrint = function(id) {
       const rec = state.entries.find(x => x.id === id);
       if (rec) runPrint(rec);
@@ -1278,7 +1247,6 @@ Mob:- 9403346235
       }
     };
 
-    // RENDER TABLE & STATS
     function renderUI() {
       const filter = elements.statusFilter.value;
       const q = elements.tableSearch.value.toLowerCase().trim();
@@ -1342,9 +1310,7 @@ Mob:- 9403346235
       }).join('');
     }
 
-    // BIND EVENT LISTENERS NATIVELY
     function bindEvents() {
-      // Clear TO Button
       document.getElementById('btnClearTo').addEventListener('click', () => {
         elements.toInput.value = '';
         elements.custName.value = '';
@@ -1353,17 +1319,14 @@ Mob:- 9403346235
         elements.toInput.focus();
       });
 
-      // Form Save Buttons
       document.getElementById('btnSaveAndPrint').addEventListener('click', () => handleSave('print'));
       document.getElementById('btnSaveAndWA').addEventListener('click', () => handleSave('wa'));
       document.getElementById('btnSaveOnly').addEventListener('click', () => handleSave('none'));
       document.getElementById('btnNewSlip').addEventListener('click', resetForm);
 
-      // Search & Filter Inputs
       elements.tableSearch.addEventListener('input', renderUI);
       elements.statusFilter.addEventListener('change', renderUI);
 
-      // Settings Modal
       document.getElementById('btnOpenSettings').addEventListener('click', () => {
         document.getElementById('modalSettings').classList.add('open');
         document.getElementById('passInput').value = '';
@@ -1402,7 +1365,6 @@ Mob:- 9403346235
         syncFromGitHub();
       });
 
-      // Backup & Restore Modal
       document.getElementById('btnOpenBackup').addEventListener('click', () => {
         document.getElementById('modalBackup').classList.add('open');
       });
@@ -1449,7 +1411,6 @@ Mob:- 9403346235
         reader.readAsText(file);
       });
 
-      // Ledger Modal
       document.getElementById('btnOpenLedger').addEventListener('click', () => {
         renderLedger();
         document.getElementById('modalLedger').classList.add('open');
